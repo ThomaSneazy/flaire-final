@@ -28,6 +28,7 @@ export default defineConfig({
           'gsap/ScrollTrigger': 'ScrollTrigger',
         },
       },
+      external: ['jquery', 'gsap', 'gsap/ScrollTrigger'],
     },
   },
   optimizeDeps: {
