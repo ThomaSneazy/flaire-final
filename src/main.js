@@ -9,7 +9,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 console.log("hello local1");
 
-// Fonction pour charger la scène Spline
 function loadSplineScene() {
     const canvas = document.getElementById('spline-main');
     if (canvas) {
@@ -1275,7 +1274,6 @@ window.addEventListener("load", () => {
                 },
             });
         } else {
-            // Pour les écrans de 768px et moins, réinitialiser les styles
             gsap.set(accentElements, {
                 filter: "blur(0px)",
                 opacity: 1,
@@ -1286,7 +1284,6 @@ window.addEventListener("load", () => {
 
     setupAnimation();
 
-    // Réagir aux changements de taille d'écran
     window.addEventListener("resize", setupAnimation);
 });
   
