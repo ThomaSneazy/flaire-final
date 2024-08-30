@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-console.log("hello local");
+console.log("hello local1");
 
 // Fonction pour charger la scène Spline
 function loadSplineScene() {
@@ -1210,69 +1210,85 @@ window.addEventListener("load", () => {
     const tutorialsTitle = document.querySelector(".tutorials__title");
     const accentElements = tutorialsTitle.querySelectorAll(".is--accent");
   
-    gsap.set(accentElements, {
-      filter: "blur(10px)",
-      opacity: 0,
-      y: 40,
-    });
-  
-    ScrollTrigger.create({
-      trigger: tutorialsTitle,
-      start: "top bottom",
-      end: "bottom center",
-      scrub: 1,
-      markers: false,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        accentElements.forEach((element, index) => {
-          const elementProgress = Math.min(
-            1,
-            Math.max(0, (progress - index * 0.1) / 0.2),
-          );
-          gsap.to(element, {
-            filter: `blur(${10 - 10 * elementProgress}px)`,
-            opacity: 0.5 + 0.5 * elementProgress,
-            y: 40 - 40 * elementProgress,
-            duration: 0.1,
-            overwrite: "auto",
-          });
-        });
-  
-        if (progress > 0.8) {
-          accentElements.forEach((element) => {
-            gsap.to(element, {
-              filter: "blur(0px)",
-              opacity: 1,
-              y: 0,
-              duration: 0.1,
-              overwrite: "auto",
+    function setupAnimation() {
+        if (window.innerWidth > 768) {
+            gsap.set(accentElements, {
+                filter: "blur(10px)",
+                opacity: 0,
+                y: 40,
             });
-          });
+        
+            ScrollTrigger.create({
+                trigger: tutorialsTitle,
+                start: "top bottom",
+                end: "bottom center",
+                scrub: 1,
+                markers: false,
+                onUpdate: (self) => {
+                    const progress = self.progress;
+                    accentElements.forEach((element, index) => {
+                        const elementProgress = Math.min(
+                            1,
+                            Math.max(0, (progress - index * 0.1) / 0.2),
+                        );
+                        gsap.to(element, {
+                            filter: `blur(${10 - 10 * elementProgress}px)`,
+                            opacity: 0.5 + 0.5 * elementProgress,
+                            y: 40 - 40 * elementProgress,
+                            duration: 0.1,
+                            overwrite: "auto",
+                        });
+                    });
+            
+                    if (progress > 0.8) {
+                        accentElements.forEach((element) => {
+                            gsap.to(element, {
+                                filter: "blur(0px)",
+                                opacity: 1,
+                                y: 0,
+                                duration: 0.1,
+                                overwrite: "auto",
+                            });
+                        });
+                    }
+                },
+                onLeave: () => {
+                    accentElements.forEach((element) => {
+                        gsap.to(element, {
+                            filter: "blur(0px)",
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.1,
+                        });
+                    });
+                },
+                onEnterBack: () => {
+                    accentElements.forEach((element, index) => {
+                        gsap.to(element, {
+                            filter: "blur(10px)",
+                            opacity: 0,
+                            y: 40,
+                            duration: 0.3,
+                            delay: index * 0.1,
+                        });
+                    });
+                },
+            });
+        } else {
+            // Pour les écrans de 768px et moins, réinitialiser les styles
+            gsap.set(accentElements, {
+                filter: "blur(0px)",
+                opacity: 1,
+                y: 0,
+            });
         }
-      },
-      onLeave: () => {
-        accentElements.forEach((element) => {
-          gsap.to(element, {
-            filter: "blur(0px)",
-            opacity: 1,
-            y: 0,
-            duration: 0.1,
-          });
-        });
-      },
-      onEnterBack: () => {
-        accentElements.forEach((element, index) => {
-          gsap.to(element, {
-            filter: "blur(10px)",
-            opacity: 0,
-            y: 40,
-            duration: 0.3,
-            delay: index * 0.1,
-          });
-        });
-      },
-    });
-  });
+    }
+
+    setupAnimation();
+
+    // Réagir aux changements de taille d'écran
+    window.addEventListener("resize", setupAnimation);
+});
   
 //////////////////////PUSH CARD INTO GRID TEAM//////////////////////
 $(document).ready(function () {
