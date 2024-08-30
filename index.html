@@ -7,6 +7,110 @@
     <title>Vite App</title>
   </head>
   <body>
+    <h1>Template ViteJs</h1>
+
+    <h2>Avec JavaScript</h2>
+    <p><a href="https://github.com/armandsalle/vite-javascript-webflow">https://github.com/armandsalle/vite-javascript-webflow</a></p>
+
+    <h2>Avec TypeScript</h2>
+    <p><a href="https://github.com/armandsalle/vite-typescript-webflow">https://github.com/armandsalle/vite-typescript-webflow</a></p>
+
+    <h2>Les étapes à suivre</h2>
+    <p>📌 Ce tuto nécessite d'avoir les bases avec Git, GitHub et NodeJs.</p>
+
+    <p>⚠️ Prérequis : Git, NodeJS, Yarn, un IDE comme VSCode, un compte GitHub et Netlify.</p>
+
+    <p>⚡ Note : Désactivez les Ad Blockers ou Brave Shield sur votre site Webflow en live.</p>
+
+    <p><strong>Attention :</strong> Ce setup ne fonctionne pas avec Safari pour l'instant !</p>
+
+    <h3>Étape 1 : Installation et initialisation 💽</h3>
+    <ol>
+      <li>Rendez-vous sur le <a href="#">template Vite + JavaScript</a></li>
+      <li>Clonez le repo en utilisant "Use this template"</li>
+      <li>Clonez votre nouveau repo localement</li>
+      <li>Déplacez-vous dans le dossier du projet</li>
+      <li>Installez les dépendances avec <code>yarn</code> ou <code>npm i</code></li>
+      <li>Ouvrez VSCode pour ce projet</li>
+    </ol>
+
+    <h3>Étape 2 : Le lancement 🏏</h3>
+    <ol>
+      <li>Commencez à coder dans <code>src/main.js</code></li>
+      <li>Lancez le serveur de dev avec <code>yarn dev</code></li>
+    </ol>
+
+    <h3>Étape 3 : Intégration avec Webflow 📝</h3>
+    <p>Deux possibilités pour l'intégration :</p>
+
+    <h4>Option 1 : Si vous faites le dev Webflow et le JS</h4>
+    <p>Ajoutez ce script dans la partie "Before  tag" du custom code de Webflow :</p>
+    <pre><code>&lt;script type="module" src="http://localhost:3000/@vite/client"&gt;&lt;/script&gt;
+&lt;script type="module" src="http://localhost:3000/src/main.js"&gt;&lt;/script&gt;</code></pre>
+
+    <h4>Option 2 : Si vous faites le dev JS mais pas le dev Webflow (recommandé)</h4>
+    <p>Ajoutez ce script dans la partie "Before  tag" du custom code de Webflow :</p>
+    <pre><code>
+      (function () {
+        const LOCALHOST_URL = [
+          'http://localhost:3000/@vite/client',
+          'http://localhost:3000/src/main.js',
+        ]
+        const PROD_URL = ['https://MY-PROJECT.netlify.app/main.js']
+    
+        function createScripts(arr, isDevMode) {
+          return arr.map(function (url) {
+            const s = document.createElement('script')
+            s.src = url
+    
+            if (isDevMode) {
+              s.type = 'module'
+            }
+    
+            return s
+          })
+        }
+    
+        function insertScript(scriptArr) {
+          scriptArr.forEach(function (script) {
+            document.body.appendChild(script)
+          })
+        }
+    
+        const localhostScripts = createScripts(LOCALHOST_URL, true)
+        const prodScripts = createScripts(PROD_URL, false)
+    
+        let choosedScripts = null
+    
+        fetch(LOCALHOST_URL[0], {})
+          .then(() => {
+            choosedScripts = localhostScripts
+          })
+          .catch((e) => {
+            choosedScripts = prodScripts
+            console.error(e)
+          })
+          .finally(() => {
+            if (choosedScripts) {
+              insertScript(choosedScripts)
+    
+              return
+            }
+    
+            console.error('something went wrong, no scripts loaded')
+          })
+      })()
+    </code></pre>
+
+    <h3>Étape 4 : Mise en production 🚀</h3>
+    <ol>
+      <li>Committez et poussez votre code sur GitHub</li>
+      <li>Créez un compte sur Netlify et déployez votre site depuis Git</li>
+      <li>Personnalisez le nom de domaine Netlify dans les paramètres</li>
+    </ol>
+
+    <p>Votre projet est maintenant en ligne ! Accédez à vos fichiers JS via : <code>https://[votre_domaine].netlify.app/main.js</code></p>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

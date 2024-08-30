@@ -24,9 +24,14 @@ export default defineConfig({
         compact: true,
         globals: {
           jquery: '$',
+          gsap: 'gsap',
+          'gsap/ScrollTrigger': 'ScrollTrigger',
         },
       },
-      external: ['jquery'],
+      external: ['jquery', 'gsap', 'gsap/ScrollTrigger'],
     },
+  },
+  optimizeDeps: {
+    include: ['gsap', 'gsap/ScrollTrigger']
   },
 })

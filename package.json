@@ -8,12 +8,16 @@
     "lint:fix": "eslint ./src --ext .js,.jsx --fix"
   },
   "devDependencies": {
-    "jquery": "^3.6.0",
+    "jquery": "^3.7.1",
     "rimraf": "^3.0.2",
     "vite": "^2.7.2",
     "vite-plugin-glsl": "^0.1.1"
   },
   "dependencies": {
-    "gsap": "^3.9.1"
+    "@studio-freight/lenis": "^1.0.42",
+    "gsap": "^3.12.5",
+    "matter": "^0.1.0",
+    "matter-js": "^0.20.0",
+    "split-type": "^0.3.4"
   }
 }
