@@ -20,15 +20,8 @@ export default defineConfig({
       output: {
         format: 'es',
         entryFileNames: 'main.js',
-        esModule: false,
         compact: true,
-        globals: {
-          jquery: '$',
-          gsap: 'gsap',
-          'gsap/ScrollTrigger': 'ScrollTrigger',
-        },
       },
-      external: ['jquery', 'gsap', 'gsap/ScrollTrigger'],
     },
   },
   optimizeDeps: {
