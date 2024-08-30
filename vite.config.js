@@ -22,6 +22,7 @@ export default defineConfig({
         entryFileNames: 'main.js',
         esModule: false,
         compact: true,
+        inlineDynamicImports: true,
         globals: {
           jquery: '$',
           // Supprimez les lignes suivantes :
