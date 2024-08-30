@@ -26,6 +26,23 @@ function loadSplineScene() {
       console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
     }
   }
+
+function loadSplineOrbScene() {
+    const canvas = document.getElementById('spline-orb');
+    if (canvas) {
+      const spline = new Application(canvas);
+      spline.load('https://prod.spline.design/0GVvjgxfzvQ6jYPp/scene.splinecode')
+        .then(() => {
+          console.log('Scène Spline Orb chargée avec succès');
+          canvas.style.display = 'flex';
+        })
+        .catch((error) => {
+          console.error('Erreur lors du chargement de la scène Spline Orb:', error);
+        });
+    } else {
+      console.error("Le canvas #spline-orb n'a pas été trouvé dans le DOM");
+    }
+  }
   
   // Attendre que la page soit complètement chargée
   window.addEventListener('load', () => {
@@ -35,9 +52,18 @@ function loadSplineScene() {
       splineCanvas.style.opacity = '0';
       splineCanvas.style.transition = 'opacity 1s ease-in-out';
     }
+    
+    // Cacher initialement le canvas Spline Orb
+    const splineOrbCanvas = document.getElementById('spline-orb');
+    if (splineOrbCanvas) {
+      splineOrbCanvas.style.display = 'none';
+    }
   
-    // Charger la scène Spline après 10 secondes
+    // Charger la scène Spline après 300ms
     setTimeout(loadSplineScene, 300);
+    
+    // Charger la scène Spline Orb après 10 secondes
+    setTimeout(loadSplineOrbScene, 10000);
   });
 // function handleSplineElements() {
 //     const splineMob = document.querySelector('.spline-mob');
