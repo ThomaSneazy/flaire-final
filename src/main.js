@@ -7,26 +7,50 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-console.log("hello matter");
+console.log("hello local");
 
 // Fonction pour charger la scène Spline
 function loadSplineScene() {
     const canvas = document.getElementById('spline-main');
     if (canvas) {
-      const spline = new Application(canvas);
-      spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
-        .then(() => {
-          console.log('Scène Spline chargée avec succès');
-          canvas.style.opacity = '1'; // Rendre le canvas visible
-        })
-        .catch((error) => {
-          console.error('Erreur lors du chargement de la scène Spline:', error);
-        });
+        if (window.innerWidth > 991) {
+            const spline = new Application(canvas);
+            spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
+                .then(() => {
+                    console.log('Scène Spline chargée avec succès');
+                    canvas.style.opacity = '1'; // Rendre le canvas visible
+                })
+                .catch((error) => {
+                    console.error('Erreur lors du chargement de la scène Spline:', error);
+                });
+        } else {
+            canvas.style.display = 'none';
+        }
     } else {
-      console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
+        console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
     }
-  }
+}
 
+function handleResize() {
+    const canvas = document.getElementById('spline-main');
+    if (canvas) {
+        if (window.innerWidth <= 991) {
+            canvas.style.display = 'none';
+        } else {
+            canvas.style.display = 'block';
+            if (canvas.style.opacity !== '1') {
+                loadSplineScene();
+            }
+        }
+    }
+}
+
+window.addEventListener('resize', handleResize);
+setTimeout(() => {
+    handleResize();
+    loadSplineScene();
+}, 300);
+    
 // function loadSplineOrbScene() {
 //     const canvas = document.getElementById('spline-orb');
 //     if (canvas) {
@@ -60,8 +84,7 @@ function loadSplineScene() {
 //     }
   
     // Charger la scène Spline après 300ms
-    setTimeout(loadSplineScene, 300);
-    
+   
     // Charger la scène Spline Orb après 10 secondes
     // setTimeout(loadSplineOrbScene, 10000);
   
