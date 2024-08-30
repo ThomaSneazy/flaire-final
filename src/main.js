@@ -37,7 +37,7 @@ function loadSplineScene() {
     }
   
     // Charger la scène Spline après 10 secondes
-    setTimeout(loadSplineScene, 8900);
+    setTimeout(loadSplineScene, 300);
   });
 // function handleSplineElements() {
 //     const splineMob = document.querySelector('.spline-mob');
