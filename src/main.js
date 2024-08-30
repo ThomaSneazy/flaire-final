@@ -2,11 +2,79 @@ import './styles/style.css'
 import SplitType from 'split-type';
 import Matter from 'matter-js';
 import Lenis from '@studio-freight/lenis'
+import { Application } from '@splinetool/runtime';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 console.log("hello matter");
+
+// Fonction pour charger la scène Spline
+function loadSplineScene() {
+    const canvas = document.getElementById('spline-main');
+    if (canvas) {
+      const spline = new Application(canvas);
+      spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
+        .then(() => {
+          console.log('Scène Spline chargée avec succès');
+          canvas.style.opacity = '1'; // Rendre le canvas visible
+        })
+        .catch((error) => {
+          console.error('Erreur lors du chargement de la scène Spline:', error);
+        });
+    } else {
+      console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
+    }
+  }
+  
+  // Attendre que la page soit complètement chargée
+  window.addEventListener('load', () => {
+    // Cacher initialement le canvas Spline
+    const splineCanvas = document.getElementById('spline-main');
+    if (splineCanvas) {
+      splineCanvas.style.opacity = '0';
+      splineCanvas.style.transition = 'opacity 1s ease-in-out';
+    }
+  
+    // Charger la scène Spline après 10 secondes
+    setTimeout(loadSplineScene, 8900);
+  });
+// function handleSplineElements() {
+//     const splineMob = document.querySelector('.spline-mob');
+//     const splineMain = document.querySelector('.spline-main');
+//     const breakpoint = 991;
+  
+//     function updateSplineElements() {
+//       const windowWidth = window.innerWidth;
+  
+//       if (windowWidth <= breakpoint) {
+//         // Mobile view
+//         if (!document.body.contains(splineMob)) {
+//           document.body.appendChild(splineMob);
+//         }
+//         if (document.body.contains(splineMain)) {
+//           splineMain.remove();
+//         }
+//       } else {
+//         // Desktop view
+//         if (document.body.contains(splineMob)) {
+//           splineMob.remove();
+//         }
+//         if (!document.body.contains(splineMain)) {
+//           document.body.appendChild(splineMain);
+//         }
+//       }
+//     }
+  
+//     // Initial call
+//     updateSplineElements();
+  
+//     // Add event listener for window resize
+//     window.addEventListener('resize', updateSplineElements);
+//   }
+  
+//   // Call the function when the DOM is fully loaded
+//   window.addEventListener('load', handleSplineElements);
 
 //////////////////////MATTERJS PARTNAIRS GRAB AND PLAY//////////////////////
 const engine = Matter.Engine.create();
@@ -292,44 +360,7 @@ mouseConstraint.mouse.element.addEventListener("mouseup", (event) => {
 });
 Matter.World.add(engine.world, mouseConstraint);
 
-//document.getElementById('btn-matter').addEventListener('click', function() {
-// createOrbs();
-//});
-
-let orbsCreated = false;
-gsap.registerPlugin(ScrollTrigger);
-
-function createOrbsWithAnimation() {
-  createOrbs();
-  orbsCreated = true;
-
-  gsap.fromTo(
-    ".orb",
-    {
-      opacity: 0,
-      scale: 0,
-    },
-    {
-      opacity: 1,
-      scale: 1,
-      duration: 1.5,
-      stagger: 0.2,
-      ease: "elastic.out(1, 0.3)",
-      //markers: true
-    },
-  );
-}
-
-ScrollTrigger.create({
-  trigger: "#matter-container",
-  start: "top center",
-  //markers: true,
-  onEnter: () => {
-    if (!orbsCreated) {
-      createOrbsWithAnimation();
-    }
-  },
-});
+createOrbs();
 
 function handleScroll() {
   const matterContainer = document.getElementById("matter-container");
