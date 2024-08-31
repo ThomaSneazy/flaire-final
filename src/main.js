@@ -89,9 +89,9 @@ function initCircleBigAnimation() {
   });
 
   function updateCircleSize() {
-    const vwSize = 60; // Taille souhaitée en vw
+    const vwSize = 60; 
     const vwInPixels = (vwSize / 100) * window.innerWidth;
-    const size = Math.min(vwInPixels, window.innerHeight * 0.8); // Limite à 80% de la hauteur de la fenêtre
+    const size = Math.min(vwInPixels, window.innerHeight * 0.8); 
 
     return size;
   }
@@ -143,9 +143,9 @@ window.addEventListener("resize", () => {
 });
 
 function updateCircleSize() {
-  const vwSize = 60; // Taille souhaitée en vw
+  const vwSize = 60; 
   const vwInPixels = (vwSize / 100) * window.innerWidth;
-  const size = Math.min(vwInPixels, window.innerHeight * 0.8); // Limite à 80% de la hauteur de la fenêtre
+  const size = Math.min(vwInPixels, window.innerHeight * 0.8); 
 
   return size;
 }
@@ -895,199 +895,199 @@ function isDesktop() {
 
 
 // // //////////////////////LOADER///////////////////////
-// // console.log("Avant DOMContentLoaded");
+// console.log("Avant DOMContentLoaded");
 
-// function disableScroll() {
-//     document.body.style.overflow = 'hidden';
-//   }
+function disableScroll() {
+    document.body.style.overflow = 'hidden';
+  }
   
-//   function enableScroll() {
-//     document.body.style.overflow = '';
-//   }
-// window.addEventListener("load", () => {
-//     disableScroll();
+  function enableScroll() {
+    document.body.style.overflow = '';
+  }
+window.addEventListener("load", () => {
+    disableScroll();
 
 
-//     var Engine = Matter.Engine,
-//       Render = Matter.Render,
-//       Runner = Matter.Runner,
-//       Bodies = Matter.Bodies,
-//       Composite = Matter.Composite,
-//       Body = Matter.Body,
-//       Vector = Matter.Vector;
+    var Engine = Matter.Engine,
+      Render = Matter.Render,
+      Runner = Matter.Runner,
+      Bodies = Matter.Bodies,
+      Composite = Matter.Composite,
+      Body = Matter.Body,
+      Vector = Matter.Vector;
   
-//     var engine = Engine.create();
-//     var loader = document.querySelector(".loader");
-//     var loaderRect = loader.getBoundingClientRect();
+    var engine = Engine.create();
+    var loader = document.querySelector(".loader");
+    var loaderRect = loader.getBoundingClientRect();
   
-//     var render = Render.create({
-//       element: loader,
-//       engine: engine,
-//       options: {
-//         width: loaderRect.width,
-//         height: loaderRect.height,
-//         wireframes: false,
-//         background: "transparent",
-//       },
-//     });
+    var render = Render.create({
+      element: loader,
+      engine: engine,
+      options: {
+        width: loaderRect.width,
+        height: loaderRect.height,
+        wireframes: false,
+        background: "transparent",
+      },
+    });
   
-//     var ground = Bodies.rectangle(
-//       loaderRect.width / 2,
-//       loaderRect.height,
-//       loaderRect.width,
-//       50,
-//       { isStatic: true, render: { fillStyle: "transparent" } },
-//     );
-//     var leftWall = Bodies.rectangle(
-//       0,
-//       loaderRect.height / 2,
-//       50,
-//       loaderRect.height,
-//       { isStatic: true, render: { fillStyle: "transparent" } },
-//     );
-//     var rightWall = Bodies.rectangle(
-//       loaderRect.width,
-//       loaderRect.height / 2,
-//       50,
-//       loaderRect.height,
-//       { isStatic: true, render: { fillStyle: "transparent" } },
-//     );
+    var ground = Bodies.rectangle(
+      loaderRect.width / 2,
+      loaderRect.height,
+      loaderRect.width,
+      50,
+      { isStatic: true, render: { fillStyle: "transparent" } },
+    );
+    var leftWall = Bodies.rectangle(
+      0,
+      loaderRect.height / 2,
+      50,
+      loaderRect.height,
+      { isStatic: true, render: { fillStyle: "transparent" } },
+    );
+    var rightWall = Bodies.rectangle(
+      loaderRect.width,
+      loaderRect.height / 2,
+      50,
+      loaderRect.height,
+      { isStatic: true, render: { fillStyle: "transparent" } },
+    );
   
-//     var isMobile = window.innerWidth <= 768;
-//     var baseOrbSize = 12.5 * 16;
-//     var orbSize = isMobile ? baseOrbSize * 0.35 : baseOrbSize;
-//     var specialOrbSize = baseOrbSize;
-//     var numOrbs = isMobile ? 20 : 14;
+    var isMobile = window.innerWidth <= 768;
+    var baseOrbSize = 12.5 * 16;
+    var orbSize = isMobile ? baseOrbSize * 0.35 : baseOrbSize;
+    var specialOrbSize = baseOrbSize;
+    var numOrbs = isMobile ? 20 : 14;
   
-//     var orbs = [];
-//     var specialOrb;
+    var orbs = [];
+    var specialOrb;
   
-//     function createSpecialOrb() {
-//         // console.log("Création de l'orbe spécial");
+    function createSpecialOrb() {
+        // console.log("Création de l'orbe spécial");
 
-//       specialOrb = Bodies.circle(
-//         loaderRect.width / 2,
-//         loaderRect.height / 2,
-//         specialOrbSize / 2,
-//         {
-//           isStatic: true,
-//           restitution: 0.8,
-//           friction: 0.005,
-//           render: {
-//             fillStyle: "#2c2b2b",
-//             strokeStyle: "#2c2b2b",
-//             lineWidth: 1,
-//           },
-//         },
-//       );
-//       specialOrb.isSpecial = true;
-//     }
+      specialOrb = Bodies.circle(
+        loaderRect.width / 2,
+        loaderRect.height / 2,
+        specialOrbSize / 2,
+        {
+          isStatic: true,
+          restitution: 0.8,
+          friction: 0.005,
+          render: {
+            fillStyle: "#2c2b2b",
+            strokeStyle: "#2c2b2b",
+            lineWidth: 1,
+          },
+        },
+      );
+      specialOrb.isSpecial = true;
+    }
   
-//     var lineWrapper = document.querySelector(".line-wrapper");
-//     var orbFake = document.querySelector(".orb-fake");
-//     gsap.set(orbFake, { scale: 0, opacity: 0 });
+    var lineWrapper = document.querySelector(".line-wrapper");
+    var orbFake = document.querySelector(".orb-fake");
+    gsap.set(orbFake, { scale: 0, opacity: 0 });
   
-//     gsap.fromTo(
-//       lineWrapper,
-//       { width: "0%" },
-//       {
-//         duration: 2.1,
-//         width: "100%",
-//         ease: "power2.out",
-//         onComplete: function () {
-//           gsap.fromTo(
-//             orbFake,
-//             { scale: 0, opacity: 0 },
-//             {
-//               duration: 0.8,
-//               scale: 1,
-//               opacity: 1,
-//               ease: "power1.inOut",
-//               transformOrigin: "center center",
-//               onComplete: function () {
-//                 createSpecialOrb();
-//                 Composite.add(engine.world, [
-//                   ground,
-//                   leftWall,
-//                   rightWall,
-//                   specialOrb,
-//                 ]);
+    gsap.fromTo(
+      lineWrapper,
+      { width: "0%" },
+      {
+        duration: 2.1,
+        width: "100%",
+        ease: "power2.out",
+        onComplete: function () {
+          gsap.fromTo(
+            orbFake,
+            { scale: 0, opacity: 0 },
+            {
+              duration: 0.8,
+              scale: 1,
+              opacity: 1,
+              ease: "power1.inOut",
+              transformOrigin: "center center",
+              onComplete: function () {
+                createSpecialOrb();
+                Composite.add(engine.world, [
+                  ground,
+                  leftWall,
+                  rightWall,
+                  specialOrb,
+                ]);
   
-//                 for (var i = 0; i < numOrbs; i++) {
-//                   var orb = Bodies.circle(
-//                     Math.random() * (loaderRect.width - orbSize) + orbSize / 2,
-//                     -orbSize * (i + 1),
-//                     orbSize / 2,
-//                     {
-//                       restitution: 0.9,
-//                       friction: 0.005,
-//                       render: {
-//                         fillStyle: "#2c2b2b",
-//                         strokeStyle: "#2c2b2b",
-//                         lineWidth: 1,
-//                       },
-//                     },
-//                   );
-//                   orbs.push(orb);
-//                 }
-//                 // console.log("Ajout des orbes au monde", orbs.length);
+                for (var i = 0; i < numOrbs; i++) {
+                  var orb = Bodies.circle(
+                    Math.random() * (loaderRect.width - orbSize) + orbSize / 2,
+                    -orbSize * (i + 1),
+                    orbSize / 2,
+                    {
+                      restitution: 0.9,
+                      friction: 0.005,
+                      render: {
+                        fillStyle: "#2c2b2b",
+                        strokeStyle: "#2c2b2b",
+                        lineWidth: 1,
+                      },
+                    },
+                  );
+                  orbs.push(orb);
+                }
+                // console.log("Ajout des orbes au monde", orbs.length);
 
-//                 Composite.add(engine.world, orbs);
-//                 // console.log("Lancement du moteur et du rendu");
-//                 var runner = Matter.Runner.create();
-//                 Matter.Runner.run(runner, engine);
-//                 Render.run(render);
+                Composite.add(engine.world, orbs);
+                // console.log("Lancement du moteur et du rendu");
+                var runner = Matter.Runner.create();
+                Matter.Runner.run(runner, engine);
+                Render.run(render);
   
-//                 setTimeout(expandSpecialOrb, 4500);
-//               },
-//             },
-//           );
-//         },
-//       },
-//     );
+                setTimeout(expandSpecialOrb, 4500);
+              },
+            },
+          );
+        },
+      },
+    );
   
-//     function expandSpecialOrb() {
-//       var center = {
-//         x: loaderRect.width / 2,
-//         y: loaderRect.height / 2,
-//       };
+    function expandSpecialOrb() {
+      var center = {
+        x: loaderRect.width / 2,
+        y: loaderRect.height / 2,
+      };
   
-//       var maxRadius = Math.max(window.innerWidth, window.innerHeight) * 1.5;
+      var maxRadius = Math.max(window.innerWidth, window.innerHeight) * 1.5;
   
-//       gsap.to(specialOrb, {
-//         duration: 1.1,
-//         circleRadius: maxRadius,
-//         ease: "power2.inOut",
-//         onUpdate: function () {
-//           Matter.Body.setVertices(
-//             specialOrb,
-//             Matter.Vertices.create(
-//               Matter.Bodies.circle(center.x, center.y, specialOrb.circleRadius)
-//                 .vertices,
-//             ),
-//           );
-//         },
-//         onComplete: function () {
-//           Render.stop(render);
-//           Engine.clear(engine);
-//           gsap.to(loader, {
-//             duration: 0.4,
-//             opacity: 0,
-//             onComplete: function () {
-//               loader.style.display = "none";
-//               enableScroll();
-//             },
-//           });
-//         },
-//       });
-//     }
+      gsap.to(specialOrb, {
+        duration: 1.1,
+        circleRadius: maxRadius,
+        ease: "power2.inOut",
+        onUpdate: function () {
+          Matter.Body.setVertices(
+            specialOrb,
+            Matter.Vertices.create(
+              Matter.Bodies.circle(center.x, center.y, specialOrb.circleRadius)
+                .vertices,
+            ),
+          );
+        },
+        onComplete: function () {
+          Render.stop(render);
+          Engine.clear(engine);
+          gsap.to(loader, {
+            duration: 0.4,
+            opacity: 0,
+            onComplete: function () {
+              loader.style.display = "none";
+              enableScroll();
+            },
+          });
+        },
+      });
+    }
   
-//     function animate() {
-//       requestAnimationFrame(animate);
-//       Engine.update(engine);
-//     }
-//     requestAnimationFrame(animate);
-//   });
+    function animate() {
+      requestAnimationFrame(animate);
+      Engine.update(engine);
+    }
+    requestAnimationFrame(animate);
+  });
 
 
 
@@ -1397,7 +1397,7 @@ window.addEventListener("load", () => {
             ScrollTrigger.create({
                 trigger: tutorialsTitle,
                 start: "top bottom",
-                end: "bottom center",
+                end: "bottom top", // Changé de "bottom center" à "bottom top" pour prolonger l'animation
                 scrub: 1,
                 markers: false,
                 onUpdate: (self) => {
