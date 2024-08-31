@@ -7,8 +7,90 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-console.log("hello local1");
+console.log("hello local soir");
 
+
+let lenis;
+
+//////////////CIRCLE BIG LAST SECTION////////////////////
+function initCircleBigAnimation() {
+  const blocIa1Elements = document.querySelectorAll('.bloc-ia-1');
+  const circleBigElements = document.querySelectorAll('.circle-big');
+
+  if (blocIa1Elements.length === 0 || circleBigElements.length === 0) {
+    console.error("Éléments .bloc-ia-1 ou .circle-big non trouvés");
+    return;
+  }
+
+  circleBigElements.forEach(circleBig => {
+    gsap.set(circleBig, { width: 0, height: 0 });
+  });
+
+  function updateCircleSize() {
+    const vwSize = 60; // Taille souhaitée en vw
+    const vwInPixels = (vwSize / 100) * window.innerWidth;
+    const size = Math.min(vwInPixels, window.innerHeight * 0.8); // Limite à 80% de la hauteur de la fenêtre
+
+    return size;
+  }
+
+  blocIa1Elements.forEach((blocIa1, index) => {
+    const circleBig = circleBigElements[index];
+    if (!circleBig) return;
+
+    ScrollTrigger.create({
+      trigger: blocIa1,
+      start: "top 80%",
+      onEnter: () => {
+        const size = updateCircleSize();
+        gsap.to(circleBig, {
+          width: size,
+          height: size,
+          duration: 1.5,
+          ease: "power2.out"
+        });
+      },
+    //   onLeaveBack: () => {
+    //     gsap.to(circleBig, {
+    //       width: 0,
+    //       height: 0,
+    //       duration: 1.5,
+    //       ease: "power2.in"
+    //     });
+    //   }
+    });
+  });
+}
+
+window.addEventListener("load", () => {
+  initCircleBigAnimation();
+});
+
+window.addEventListener("resize", () => {
+  const circleBigElements = document.querySelectorAll('.circle-big');
+  const size = updateCircleSize();
+  
+  circleBigElements.forEach(circleBig => {
+    gsap.to(circleBig, {
+      width: size,
+      height: size,
+      duration: 0.4,
+      ease: "power3.inOut"
+    });
+  });
+});
+
+function updateCircleSize() {
+  const vwSize = 60; // Taille souhaitée en vw
+  const vwInPixels = (vwSize / 100) * window.innerWidth;
+  const size = Math.min(vwInPixels, window.innerHeight * 0.8); // Limite à 80% de la hauteur de la fenêtre
+
+  return size;
+}
+
+
+
+// /////////Load Spline Scene////////////////////
 function loadSplineScene() {
     const canvas = document.getElementById('spline-main');
     if (canvas) {
@@ -480,6 +562,33 @@ updateEngine();
       },
     );
   }
+
+  function animateLetterUp(element) {
+    if (isMob()) return;
+  
+    const split = new SplitType(element, { types: "chars" });
+  
+    gsap.set(split.chars, {
+      opacity: 0,
+      x: "20px",
+      filter: "blur(10px)",
+      transformOrigin: "0% 50%",
+    });
+  
+    gsap.to(split.chars, {
+      duration: 0.8,
+      opacity: 1,
+      y: "0px",
+      filter: "blur(0px)",
+      stagger: 0.06,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: element,
+        start: "top 80%",
+      },
+    });
+  }
+  
   
   function animateLineUp(element) {
     if (isMob()) return;
@@ -504,6 +613,7 @@ updateEngine();
       },
     });
   }
+
   
   function animateOrbElastic(element) {
     if (isMob()) return;
@@ -526,6 +636,8 @@ updateEngine();
     document.querySelectorAll(".line-up").forEach(animateLineUp);
     document.querySelectorAll(".orb-elastic").forEach(animateOrbElastic);
     document.querySelectorAll("[fade-up]").forEach(animateFadeUp);
+    document.querySelectorAll('.letter-up').forEach(animateLetterUp);
+
   }
   
   window.addEventListener("load", initAnimations);
@@ -720,7 +832,7 @@ function isDesktop() {
   
 
 
-//////////////////////LOADER///////////////////////
+// //////////////////////LOADER///////////////////////
 // console.log("Avant DOMContentLoaded");
 
 function disableScroll() {
@@ -914,6 +1026,9 @@ window.addEventListener("load", () => {
     }
     requestAnimationFrame(animate);
   });
+
+
+
 
 //////////////////////CALL FORM ON CLICK//////////////////////
 window.addEventListener("load", () => {
@@ -1315,10 +1430,13 @@ $(document).ready(function () {
   
     handleTeamCard();
   });
-  
-  //////////////////////LENIS SCROLL//////////////////////
+
+
+
+
+//////////////////////LENIS SCROLL//////////////////////
 window.addEventListener("load", () => {
-    const lenis = new Lenis({
+    lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       direction: "vertical",
@@ -1336,4 +1454,5 @@ window.addEventListener("load", () => {
     }
   
     requestAnimationFrame(raf);
-  });
+
+});
