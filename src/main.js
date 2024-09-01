@@ -189,10 +189,7 @@ function handleResize() {
 }
 
 window.addEventListener('resize', handleResize);
-setTimeout(() => {
-    handleResize();
-    loadSplineScene();
-}, 300);
+
     
 // function loadSplineOrbScene() {
 //     const canvas = document.getElementById('spline-orb');
@@ -842,26 +839,12 @@ function isMobile() {
           containerAnimation: scrollTween,
           start: "left 80%",
           end: "right 20%",
-          onEnter: () => {
-            scrollTween.timeScale(0.5); // Ralentir le scroll
-            animateOrbs(orbs);
-          },
-          onEnterBack: () => {
-            scrollTween.timeScale(0.5); // Ralentir le scroll
-            animateOrbs(orbs);
-          },
-          onLeave: () => {
-            scrollTween.timeScale(1); // Rétablir la vitesse normale
-          },
-          onLeaveBack: () => {
-            scrollTween.timeScale(1); // Rétablir la vitesse normale
-          },
         });
       }
     }
   
     function animateOrbs(orbs) {
-      gsap.set(orbs, { scale: 0.2, opacity: 0 });
+      gsap.set(orbs, { scale: 0, opacity: 0 });
   
       gsap.to(orbs, {
         scale: 1,
@@ -869,7 +852,7 @@ function isMobile() {
         duration: 1.5,
         ease: "elastic.out(1, 0.3)",
         stagger: {
-          amount: 1.5,
+          amount: 1.1,
           from: "random",
         },
       });
