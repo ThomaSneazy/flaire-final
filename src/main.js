@@ -421,7 +421,7 @@ function createOrbs() {
     "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a68299b2bff46b633b5c8d_ynergie.png",
   ];
 
-  const specialLogos = ["gamers", "benebono-petit", "z-petit"];
+  const specialLogos = ["yousign", "voodoo2", "mojo", "upciti","epsor" ];
   const specialLogoIndexes = imageUrls.reduce((acc, url, index) => {
     if (specialLogos.some((logo) => url.includes(logo))) {
       acc.push(index);
@@ -719,182 +719,178 @@ function isMobile() {
     return window.innerWidth <= 768;
   }
   
-  function initMarqueeAnimation() {
-    let marqueeWrappers = gsap.utils.toArray(".marquee-wrapper");
-  
-    if (isMobile()) {
-      marqueeWrappers.forEach((wrapper, index) => {
-        const direction = index % 2 === 0 ? -1 : 1;
-        const moveDistance = direction * 30;
-  
-        gsap.from(wrapper, {
-          y: "100%",
-          opacity: 0,
-          ease: "power2.out",
-          duration: 1,
-          scrollTrigger: {
-            trigger: wrapper,
-            start: "top bottom",
-            end: "top center",
-            scrub: true,
-          },
-        });
-  
-        gsap.to(wrapper, {
-          x: `${moveDistance}%`,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".section.is-marquee",
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-      });
-    } else {
-      let tlMarquee = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".section.is-marquee",
-          start: "top top",
-          end: "+=300%",
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-        },
-      });
-  
-      marqueeWrappers.forEach((wrapper, index) => {
-        tlMarquee.from(
-          wrapper,
-          {
-            y: "100%",
-            opacity: 0,
-            ease: "power2.out",
-            duration: 3,
-          },
-          index * 1.5,
-        );
-      });
-  
-      tlMarquee.addLabel("startMarquee", ">");
-  
-      marqueeWrappers.forEach((wrapper, index) => {
-        const direction = index % 2 === 0 ? -1 : 1;
-        const moveDistance = direction * 30;
-        tlMarquee.to(
-          wrapper,
-          {
-            x: `${moveDistance}%`,
-            ease: "none",
-            duration: 10,
-          },
-          "startMarquee",
-        );
-      });
-    }
-  }
-  
-  initMarqueeAnimation();
-  
-  window.addEventListener("resize", () => {
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-    gsap.killTweensOf(".marquee-wrapper");
-    initMarqueeAnimation();
-  });
-  
-
-  //////////////////////HORIZONTAL SCROLL//////////////////////
-
-function isDesktop() {
-    return window.innerWidth > 768;
-  }
-  
-  function initGalleryAnimation() {
-    if (!isDesktop()) return;
-  
+  function initCombinedAnimations() {
+    const marqueeWrappers = gsap.utils.toArray(".marquee-wrapper");
     const galleryContent = document.querySelector(".gallery__content");
     const galleryItems = gsap.utils.toArray(".gallery__item");
     const lastItem = document.querySelector(".gallery__item.is-last");
   
-    const scrollTween = gsap.to(galleryContent, {
-      x: () =>
-        -(galleryContent.scrollWidth - document.documentElement.clientWidth),
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".gallery-wrapper",
-        start: "top top",
-        end: () =>
-          `+=${galleryContent.scrollWidth - document.documentElement.clientWidth}`,
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+    function initMarqueeAnimation() {
+      if (isMobile()) {
+        marqueeWrappers.forEach((wrapper, index) => {
+          const direction = index % 2 === 0 ? -1 : 1;
+          const moveDistance = direction * 50; 
   
-    galleryItems.forEach((item) => {
-      if (!item.classList.contains("is-last")) {
-        const content = item.querySelector(".gallery__item-content");
+          gsap.from(wrapper, {
+            y: "100%",
+            opacity: 0,
+            ease: "power2.out",
+            duration: 1,
+            scrollTrigger: {
+              trigger: wrapper,
+              start: "top bottom",
+              end: "top center",
+              scrub: true,
+            },
+          });
   
-        gsap.set(content, { filter: "blur(10px)" });
+          gsap.to(wrapper, {
+            x: `${moveDistance}%`,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".section.is-marquee",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1, 
+            },
+          });
+        });
+      } else {
+        let tlMarquee = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".section.is-marquee",
+            start: "top top",
+            end: "+=500%", 
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+          },
+        });
   
-        ScrollTrigger.create({
-          trigger: item,
-          containerAnimation: scrollTween,
-          start: "left center",
-          end: "right center",
-          onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-          onLeave: () =>
-            gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
-          onEnterBack: () =>
-            gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-          onLeaveBack: () =>
-            gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+        marqueeWrappers.forEach((wrapper, index) => {
+          tlMarquee.from(
+            wrapper,
+            {
+              y: "100%",
+              opacity: 0,
+              ease: "power2.out",
+              duration: 3,
+            },
+            index * 1.5
+          );
+        });
+  
+        tlMarquee.addLabel("startMarquee", ">");
+  
+        marqueeWrappers.forEach((wrapper, index) => {
+          const direction = index % 2 === 0 ? -1 : 1;
+          const moveDistance = direction * 50; 
+          tlMarquee.to(
+            wrapper,
+            {
+              x: `${moveDistance}%`,
+              ease: "none",
+              duration: 20, 
+            },
+            "startMarquee"
+          );
         });
       }
-    });
+    }
   
-    if (lastItem) {
-      const orbs = lastItem.querySelectorAll(".orb-horizontal");
+    function initGalleryAnimation() {
+      if (isMobile()) return;
   
-      ScrollTrigger.create({
-        trigger: lastItem,
-        containerAnimation: scrollTween,
-        start: "left 80%",
-        end: "right 20%",
-        onEnter: () => animateOrbs(orbs),
-        onEnterBack: () => animateOrbs(orbs),
+      const scrollTween = gsap.to(galleryContent, {
+        x: () => -(galleryContent.scrollWidth - document.documentElement.clientWidth),
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".gallery-wrapper",
+          start: "top top",
+          end: () => `+=${galleryContent.scrollWidth - document.documentElement.clientWidth}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+  
+      galleryItems.forEach((item) => {
+        if (!item.classList.contains("is-last")) {
+          const content = item.querySelector(".gallery__item-content");
+  
+          gsap.set(content, { filter: "blur(10px)" });
+  
+          ScrollTrigger.create({
+            trigger: item,
+            containerAnimation: scrollTween,
+            start: "left center",
+            end: "right center",
+            onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+            onLeave: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+            onEnterBack: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+            onLeaveBack: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+          });
+        }
+      });
+  
+      if (lastItem) {
+        const orbs = lastItem.querySelectorAll(".orb-horizontal");
+  
+        ScrollTrigger.create({
+          trigger: lastItem,
+          containerAnimation: scrollTween,
+          start: "left 80%",
+          end: "right 20%",
+          onEnter: () => {
+            scrollTween.timeScale(0.5); // Ralentir le scroll
+            animateOrbs(orbs);
+          },
+          onEnterBack: () => {
+            scrollTween.timeScale(0.5); // Ralentir le scroll
+            animateOrbs(orbs);
+          },
+          onLeave: () => {
+            scrollTween.timeScale(1); // Rétablir la vitesse normale
+          },
+          onLeaveBack: () => {
+            scrollTween.timeScale(1); // Rétablir la vitesse normale
+          },
+        });
+      }
+    }
+  
+    function animateOrbs(orbs) {
+      gsap.set(orbs, { scale: 0.2, opacity: 0 });
+  
+      gsap.to(orbs, {
+        scale: 1,
+        opacity: 1,
+        duration: 1.5,
+        ease: "elastic.out(1, 0.3)",
+        stagger: {
+          amount: 1.5,
+          from: "random",
+        },
       });
     }
+  
+    initMarqueeAnimation();
+    initGalleryAnimation();
   }
   
-  function animateOrbs(orbs) {
-    gsap.set(orbs, { scale: 0.2, opacity: 0 });
-  
-    gsap.to(orbs, {
-      scale: 1,
-      opacity: 1,
-      duration: 2,
-      ease: "elastic.out(1, 0.3)",
-      stagger: {
-        amount: 1.5,
-        from: "random",
-      },
-    });
-  }
-  
-  initGalleryAnimation();
+  initCombinedAnimations();
   
   window.addEventListener("resize", () => {
     ScrollTrigger.getAll().forEach((st) => st.kill());
     gsap.killTweensOf("*");
-    initGalleryAnimation();
+    initCombinedAnimations();
   });
 
   
 
 
-// // //////////////////////LOADER///////////////////////
+// // // //////////////////////LOADER///////////////////////
 // console.log("Avant DOMContentLoaded");
 
 function disableScroll() {
@@ -1096,7 +1092,8 @@ window.addEventListener("load", () => {
 window.addEventListener("load", () => {
     const callForms = document.querySelectorAll(".call-form");
     const overlayBlur = document.querySelector(".overlay-blur");
-    const formWrapper = document.querySelector(".form__wrapper");
+    const formCircle = document.querySelector(".form-circle");
+    const formContact = document.querySelector(".form-contact");
     let isOpen = false;
   
     gsap.set(overlayBlur, {
@@ -1104,93 +1101,96 @@ window.addEventListener("load", () => {
       display: "none",
     });
   
-    gsap.set(formWrapper, {
+    gsap.set(formCircle, {
       opacity: 0,
-      filter: "blur(20px)",
-      display: "none",
+      scale: 0.2,
     });
   
-    function showOverlayAndForm() {
+    gsap.set(formContact, {
+      opacity: 0,
+    });
+  
+    function showOverlay() {
       if (isOpen) return;
       isOpen = true;
   
-      const tl = gsap.timeline();
-  
       overlayBlur.style.display = "flex";
-      tl.to(overlayBlur, {
-        duration: 0.8,
+      gsap.to(overlayBlur, {
+        duration: 0.6,
         opacity: 1,
         ease: "power3.out",
+        onComplete: showFormCircle,
       });
-  
-      tl.add(() => {
-        formWrapper.style.display = "block";
-      }, "-=0.3");
-  
-      tl.to(
-        formWrapper,
-        {
-          duration: 0.8,
-          opacity: 1,
-          filter: "blur(0px)",
-          ease: "power2.out",
-        },
-        "-=0.3",
-      );
+    }
+    function showFormCircle() {
+      gsap.timeline()
+        .to(formCircle, {
+          duration: 0.6,
+          opacity: 1.3,
+          scale: 1,
+          ease: "elastic.out(1, 0.4)",
+        })
+        .to(formCircle, {
+          duration: 0.125, // Pause légère
+          scale: 1,
+          ease: "none",
+        })
+        .to(formCircle, {
+          duration: 0.8, 
+          scale: 10,
+          ease: "power3.inOut",
+          onComplete: showFormContact,
+        })
+        .to(formCircle, {
+          duration: 0.8, 
+          scale: 10,
+          ease: "power3.inOut",
+        })
+        .add(showFormContact, "-=0.4");
+    }
+    function showFormContact() {
+      gsap.to(formContact, {
+        duration: 0.6,
+        opacity: 1,
+        ease: "power2.out",
+      });
     }
   
-    function hideOverlayAndForm() {
+    function hideOverlay() {
       if (!isOpen) return;
       isOpen = false;
   
-      const tl = gsap.timeline({
-        onComplete: () => {
-          overlayBlur.style.display = "none";
-          formWrapper.style.display = "none";
-        },
-      });
-  
-      tl.to(formWrapper, {
+      gsap.to(overlayBlur, {
         duration: 0.6,
         opacity: 0,
-        filter: "blur(20px)",
-        ease: "power2.in",
-      });
-  
-      tl.to(
-        overlayBlur,
-        {
-          duration: 0.6,
-          opacity: 0,
-          ease: "power3.in",
+        ease: "power3.in",
+        onComplete: () => {
+          overlayBlur.style.display = "none";
+          gsap.set(formCircle, { opacity: 0, scale: 0.2 });
+          gsap.set(formContact, { opacity: 0 });
         },
-        "-=0.3",
-      );
+      });
     }
   
-    function toggleOverlayAndForm() {
+    function toggleOverlay() {
       if (isOpen) {
-        hideOverlayAndForm();
+        hideOverlay();
       } else {
-        showOverlayAndForm();
+        showOverlay();
       }
     }
   
     callForms.forEach((callForm) => {
-      callForm.addEventListener("click", toggleOverlayAndForm);
+      callForm.addEventListener("click", toggleOverlay);
     });
   
     overlayBlur.addEventListener("click", (event) => {
       if (event.target === overlayBlur) {
-        hideOverlayAndForm();
+        hideOverlay();
       }
     });
   });
-
   
-
-  
-
 //////////////////////BLUR ON JOB HOVER//////////////////////
 window.addEventListener("load", () => {
     const jobBlocks = document.querySelectorAll(".job__block");
