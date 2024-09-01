@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-console.log("hello local soir");
+console.log("hello local bye");
 
 
 let lenis;
@@ -161,7 +161,7 @@ function loadSplineScene() {
             spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
                 .then(() => {
                     console.log('Scène Spline chargée avec succès');
-                    canvas.style.opacity = '1'; // Rendre le canvas visible
+                    canvas.style.opacity = '1'; 
                 })
                 .catch((error) => {
                     console.error('Erreur lors du chargement de la scène Spline:', error);
