@@ -156,19 +156,15 @@ function updateCircleSize() {
 function loadSplineScene() {
     const canvas = document.getElementById('spline-main');
     if (canvas) {
-        if (window.innerWidth > 991) {
-            const spline = new Application(canvas);
-            spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
-                .then(() => {
-                    console.log('Scène Spline chargée avec succès');
-                    canvas.style.opacity = '1'; 
-                })
-                .catch((error) => {
-                    console.error('Erreur lors du chargement de la scène Spline:', error);
-                });
-        } else {
-            canvas.style.display = 'none';
-        }
+        const spline = new Application(canvas);
+        spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
+            .then(() => {
+                console.log('Scène Spline chargée avec succès');
+                canvas.style.opacity = '1'; 
+            })
+            .catch((error) => {
+                console.error('Erreur lors du chargement de la scène Spline:', error);
+            });
     } else {
         console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
     }
@@ -177,13 +173,9 @@ function loadSplineScene() {
 function handleResize() {
     const canvas = document.getElementById('spline-main');
     if (canvas) {
-        if (window.innerWidth <= 991) {
-            canvas.style.display = 'none';
-        } else {
-            canvas.style.display = 'block';
-            if (canvas.style.opacity !== '1') {
-                loadSplineScene();
-            }
+        canvas.style.display = 'block';
+        if (canvas.style.opacity !== '1') {
+            loadSplineScene();
         }
     }
 }
@@ -656,6 +648,12 @@ updateEngine();
     if (isMob()) return;
   
     const split = new SplitType(element, { types: "lines" });
+  
+    // Vérifiez si split.lines existe et n'est pas vide
+    if (!split.lines || split.lines.length === 0) {
+      console.warn("Aucune ligne trouvée pour l'animation LineUp");
+      return;
+    }
   
     gsap.set(split.lines, {
       opacity: 0,
