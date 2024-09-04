@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-console.log("hello local bye");
+console.log("hello local");
 
 
 let lenis;
@@ -159,11 +159,11 @@ function loadSplineScene() {
         const spline = new Application(canvas);
         spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
             .then(() => {
-                console.log('Scène Spline chargée avec succès');
+                // console.log('Scène Spline chargée avec succès');
                 canvas.style.opacity = '1'; 
             })
             .catch((error) => {
-                console.error('Erreur lors du chargement de la scène Spline:', error);
+                // console.error('Erreur lors du chargement de la scène Spline:', error);
             });
     } else {
         console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
@@ -314,6 +314,82 @@ function createBoundaries() {
 
 createBoundaries();
 
+function createOrbs() {
+  const orbCount = 18;
+  const viewportHeight = window.innerHeight;
+  const viewportWidth = window.innerWidth;
+  const minRadius = Math.min(viewportHeight, viewportWidth) * 0.06;
+  const maxRadius = Math.min(viewportHeight, viewportWidth) * 0.12;
+  const padding = Math.min(viewportHeight, viewportWidth) * 0.05;
+
+  const imageUrls = [
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a8c350e767a5aaf605a173_twin.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a8195d365ae1b90271d81b_pony.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a3a92b28e9986cc27a49c3_yousignsmall%201.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a683bee6046a85bd0f1e96_voodoo2.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc32d9cc6dffc3af2f7_epsor.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3662062b2ef6a9637_sensitov.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a681d5a0aef487364aa37e_brigad.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc35ec34d7051fef4bc_voggt.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3a0aef48736497b5d_mojo.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc33d2c836983ab7de4_veesion.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3c3484ec606da9930_kard.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc371ccd2ba7cd442c6_upciti.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc34499be2c655a7e6b_gamers.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3574343d34e62cc5f_regate.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a6868fb1e29646c51f123a_z-petit.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a68299574343d34e6487cc_worklif.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a6868fbd3e635cd90fd002_benebono-petit.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a68299b2bff46b633b5c8d_ynergie.webp",
+  ];
+
+  const specialLogos = ["yousign", "voodoo2", "mojo", "upciti","epsor" ];
+  const specialLogoIndexes = imageUrls.reduce((acc, url, index) => {
+    if (specialLogos.some((logo) => url.includes(logo))) {
+      acc.push(index);
+    }
+    return acc;
+  }, []);
+
+  const shuffledImageUrls = [...imageUrls].sort(() => Math.random() - 0.5);
+
+  const orbPromises = shuffledImageUrls.map((imageUrl, i) => {
+    const isSpecialLogo = specialLogoIndexes.includes(
+      imageUrls.indexOf(imageUrl),
+    );
+    const orbRadius = isSpecialLogo
+      ? maxRadius
+      : Math.random() * (maxRadius - minRadius) + minRadius;
+
+    return createOrbTexture(orbRadius * 2, imageUrl).then((canvas) => {
+      const orb = Matter.Bodies.circle(
+        Math.random() * (viewportWidth - padding * 2) + padding,
+        Math.random() * (viewportHeight - padding * 2) + padding,
+        orbRadius,
+        {
+          restitution: 0.2,
+          friction: 0.1,
+          frictionAir: 0.03,
+          density: 0.001,
+          render: {
+            sprite: {
+              texture: canvas.toDataURL(),
+              xScale: 1,
+              yScale: 1,
+            },
+          },
+        },
+      );
+
+      return orb;
+    });
+  });
+
+  return Promise.all(orbPromises).then((orbs) => {
+    Matter.World.add(engine.world, orbs);
+  });
+}
+
 function createOrbTexture(size, imageUrl) {
   return new Promise((resolve) => {
     const canvas = document.createElement("canvas");
@@ -384,89 +460,6 @@ function createOrbTexture(size, imageUrl) {
   });
 }
 
-function createOrbs() {
-  const orbCount = 18;
-  const viewportHeight = window.innerHeight;
-  const viewportWidth = window.innerWidth;
-  const minRadius = Math.min(viewportHeight, viewportWidth) * 0.06;
-  const maxRadius = Math.min(viewportHeight, viewportWidth) * 0.12;
-  const padding = Math.min(viewportHeight, viewportWidth) * 0.05;
-
-  const imageUrls = [
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a8c350e767a5aaf605a173_twin.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a8195d365ae1b90271d81b_pony.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a3a92b28e9986cc27a49c3_yousignsmall%201.png",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a683bee6046a85bd0f1e96_voodoo2.webp",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc32d9cc6dffc3af2f7_epsor.png",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66ad0f04888b783b40acee42_flaire-final.webp",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a681d5a0aef487364aa37e_brigad.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc35ec34d7051fef4bc_voggt.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc3a0aef48736497b5d_mojo.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc33d2c836983ab7de4_veesion.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc3c3484ec606da9930_kard.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc371ccd2ba7cd442c6_upciti.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc34499be2c655a7e6b_gamers.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc3574343d34e62cc5f_regate.png",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a6868fb1e29646c51f123a_z-petit.webp",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a68299574343d34e6487cc_worklif.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a6868fbd3e635cd90fd002_benebono-petit.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a68299b2bff46b633b5c8d_ynergie.png",
-  ];
-
-  const specialLogos = ["yousign", "voodoo2", "mojo", "upciti","epsor" ];
-  const specialLogoIndexes = imageUrls.reduce((acc, url, index) => {
-    if (specialLogos.some((logo) => url.includes(logo))) {
-      acc.push(index);
-    }
-    return acc;
-  }, []);
-
-  const shuffledImageUrls = [...imageUrls].sort(() => Math.random() - 0.5);
-
-  const orbPromises = shuffledImageUrls.map((imageUrl, i) => {
-    const isSpecialLogo = specialLogoIndexes.includes(
-      imageUrls.indexOf(imageUrl),
-    );
-    const orbRadius = isSpecialLogo
-      ? maxRadius
-      : Math.random() * (maxRadius - minRadius) + minRadius;
-
-    return createOrbTexture(orbRadius * 2, imageUrl).then((canvas) => {
-      const orb = Matter.Bodies.circle(
-        Math.random() * (viewportWidth - padding * 2) + padding,
-        Math.random() * (viewportHeight - padding * 2) + padding,
-        orbRadius,
-        {
-          restitution: 0.2,
-          friction: 0.1,
-          frictionAir: 0.03,
-          density: 0.001,
-          render: {
-            sprite: {
-              texture: canvas.toDataURL(),
-              xScale: 1,
-              yScale: 1,
-            },
-          },
-        },
-      );
-
-      Matter.Body.setVelocity(orb, {
-        x: (Math.random() - 0.5) * 2,
-        y: (Math.random() - 0.5) * 2,
-      });
-      Matter.Body.rotate(orb, Math.random() * Math.PI * 2);
-      Matter.Body.setAngularVelocity(orb, (Math.random() - 0.5) * 0.02);
-
-      return orb;
-    });
-  });
-
-  Promise.all(orbPromises).then((orbs) => {
-    Matter.World.add(engine.world, orbs);
-  });
-}
-
 function updateCanvasDimensions() {
   const viewportHeight = window.innerHeight;
   const viewportWidth = window.innerWidth;
@@ -476,7 +469,7 @@ function updateCanvasDimensions() {
   render.options.width = viewportWidth;
   render.options.height = viewportHeight;
 
-  Matter.World.remove(engine.world, [ground, ceiling, leftWall, rightWall]);
+  Matter.World.remove(engine.world, [ground, leftWall, rightWall, ceiling]);
   createBoundaries();
 
   // Mettre à jour la position des orbes
@@ -514,6 +507,8 @@ render.canvas.addEventListener("wheel", (event) => {
   }
 });
 
+const matterContainer = document.getElementById("matter-container");
+
 const mouseConstraint = Matter.MouseConstraint.create(engine, {
   element: render.canvas,
   constraint: {
@@ -542,12 +537,41 @@ mouseConstraint.mouse.element.addEventListener("mouseup", (event) => {
   mouseConstraint.mouse.mouseup(event);
   matterContainer.style.cursor = "grab";
 });
-Matter.World.add(engine.world, mouseConstraint);
 
-createOrbs();
+// Modifiez cette fonction pour gérer le clic sur le bouton
+function handleSpawnOrbsClick() {
+  const spawnOrbsButton = document.getElementById('spawnOrbs');
+  
+  // Faire disparaître le bouton
+  gsap.to(spawnOrbsButton, {
+    opacity: 0,
+    duration: 0.3,
+    onComplete: () => {
+      spawnOrbsButton.style.display = 'none';
+      
+      // Supprime tous les orbes existants
+      const existingOrbs = Matter.Composite.allBodies(engine.world).filter(body => body.label !== "Rectangle Body");
+      Matter.World.remove(engine.world, existingOrbs);
+
+      // Crée de nouveaux orbes
+      createOrbs().then(() => {
+        console.log("Nouvelles orbes créées");
+      });
+    }
+  });
+}
+
+// Ajoutez un écouteur d'événements pour le bouton spawnOrbs
+document.addEventListener('DOMContentLoaded', () => {
+  const spawnOrbsButton = document.getElementById('spawnOrbs');
+  if (spawnOrbsButton) {
+    spawnOrbsButton.addEventListener('click', handleSpawnOrbsClick);
+  } else {
+    console.error("Le bouton avec l'ID 'spawnOrbs' n'a pas été trouvé");
+  }
+});
 
 function handleScroll() {
-  const matterContainer = document.getElementById("matter-container");
   matterContainer.addEventListener("mouseenter", () => {
     matterContainer.style.cursor = "grab";
   });
@@ -583,12 +607,13 @@ let runner = Matter.Runner.create();
 Matter.Runner.run(runner, engine);
 Matter.Render.run(render);
 
-// Ajoutez cette fonction pour mettre à jour le moteur à chaque frame
 function updateEngine() {
   Matter.Engine.update(engine);
   requestAnimationFrame(updateEngine);
 }
 updateEngine();
+
+window.addEventListener("resize", updateCanvasDimensions);
 
   //////////////////////GSAP FADEUP LINEUP//////////////////////
   function isMob() {
