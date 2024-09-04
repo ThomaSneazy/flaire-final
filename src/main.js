@@ -398,7 +398,7 @@ function createOrbs() {
     "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a3a92b28e9986cc27a49c3_yousignsmall%201.png",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a683bee6046a85bd0f1e96_voodoo2.webp",
     "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc32d9cc6dffc3af2f7_epsor.png",
-    "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc3662062b2ef6a9637_sensitov.png",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66ad0f04888b783b40acee42_flaire-final.webp",
     "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a681d5a0aef487364aa37e_brigad.png",
     "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc35ec34d7051fef4bc_voggt.png",
     "https://uploads-ssl.webflow.com/667ebf1b9f3deeecd914b073/66a67fc3a0aef48736497b5d_mojo.png",
