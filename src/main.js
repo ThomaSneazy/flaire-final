@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-console.log("hello local");
+console.log("hello local 0509");
 
 
 let lenis;
@@ -33,7 +33,7 @@ function initCircleCenterAnimation() {
       });
       
       gsap.set(paragraphs, {
-        display: 'none',
+        // display: 'none',
         opacity: 0
       });
   
@@ -43,16 +43,18 @@ function initCircleCenterAnimation() {
         onEnter: () => {
           gsap.to(circleCenter, {
             opacity: 1,
-            width: "20vw",
-            height: "20vw",
+            width: "25vw",
+            height: "25vw",
             duration: 1.5,
             ease: "power2.inOut",
             onComplete: () => {
-              gsap.to(paragraphs, {
-                display: 'flex',
-                opacity: 1,
-                duration: 0.5,
-                stagger: 0.1
+              gsap.delayedCall(0.2, () => {
+                gsap.to(paragraphs, {
+                  // display: 'flex',
+                  opacity: 1,
+                  duration: 0.5,
+                  stagger: 0.1
+                });
               });
             }
           });
@@ -154,37 +156,60 @@ function updateCircleSize() {
 
 // /////////Load Spline Scene////////////////////
 function loadSplineScene() {
-    const canvas = document.getElementById('spline-main');
-    if (canvas) {
-        const spline = new Application(canvas);
-        spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
-            .then(() => {
-                // console.log('Scène Spline chargée avec succès');
-                canvas.style.opacity = '1'; 
-            })
-            .catch((error) => {
-                // console.error('Erreur lors du chargement de la scène Spline:', error);
-            });
-    } else {
-        console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
-    }
+  const canvas = document.getElementById('spline-main');
+  if (canvas) {
+      const spline = new Application(canvas);
+      spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
+          .then(() => {
+              gsap.to(canvas, { opacity: 1, duration: 0.5 });
+          })
+          .catch((error) => {
+              console.error('Erreur lors du chargement de la scène Spline:', error);
+          });
+  } else {
+      console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
+  }
 }
 
 function handleResize() {
-    const canvas = document.getElementById('spline-main');
-    if (canvas) {
-        canvas.style.display = 'block';
-        if (canvas.style.opacity !== '1') {
-            loadSplineScene();
-        }
-    }
+  const canvas = document.getElementById('spline-main');
+  if (canvas) {
+      if (canvas.style.opacity !== '1') {
+          loadSplineScene();
+      }
+  }
+}
+
+function handleSplineVisibility() {
+  const marqueeSection = document.querySelector('.section.is-marquee');
+  const canvas = document.getElementById('spline-main');
+  if (marqueeSection && canvas) {
+      gsap.set(canvas, { opacity: 1, display: 'block' });
+
+      ScrollTrigger.create({
+          trigger: marqueeSection,
+          start: "top bottom",
+          end: "bottom top",
+          onEnter: () => {
+              gsap.to(canvas, { 
+                  opacity: 0, 
+                  duration: 0.3, 
+                  onComplete: () => gsap.set(canvas, { display: 'none' }) 
+              });
+          },
+          onLeaveBack: () => {
+              gsap.set(canvas, { display: 'block' });
+              gsap.to(canvas, { opacity: 1, duration: 0.3 });
+          }
+      });
+  }
 }
 
 window.addEventListener('resize', handleResize);
-setTimeout(() => {
-    handleResize();
-    loadSplineScene();
-}, 300);
+window.addEventListener('load', () => {
+  handleSplineVisibility();
+  loadSplineScene();
+});
     
 // function loadSplineOrbScene() {
 //     const canvas = document.getElementById('spline-orb');
@@ -538,38 +563,8 @@ mouseConstraint.mouse.element.addEventListener("mouseup", (event) => {
   matterContainer.style.cursor = "grab";
 });
 
-// Modifiez cette fonction pour gérer le clic sur le bouton
-function handleSpawnOrbsClick() {
-  const spawnOrbsButton = document.getElementById('spawnOrbs');
-  
-  // Faire disparaître le bouton
-  gsap.to(spawnOrbsButton, {
-    opacity: 0,
-    duration: 0.3,
-    onComplete: () => {
-      spawnOrbsButton.style.display = 'none';
-      
-      // Supprime tous les orbes existants
-      const existingOrbs = Matter.Composite.allBodies(engine.world).filter(body => body.label !== "Rectangle Body");
-      Matter.World.remove(engine.world, existingOrbs);
-
-      // Crée de nouveaux orbes
-      createOrbs().then(() => {
-        console.log("Nouvelles orbes créées");
-      });
-    }
-  });
-}
-
-// Ajoutez un écouteur d'événements pour le bouton spawnOrbs
-document.addEventListener('DOMContentLoaded', () => {
-  const spawnOrbsButton = document.getElementById('spawnOrbs');
-  if (spawnOrbsButton) {
-    spawnOrbsButton.addEventListener('click', handleSpawnOrbsClick);
-  } else {
-    console.error("Le bouton avec l'ID 'spawnOrbs' n'a pas été trouvé");
-  }
-});
+// Nouvelle fonction pour gérer l'apparition des orbes lors du scroll
+let orbsCreated = false;
 
 function handleScroll() {
   matterContainer.addEventListener("mouseenter", () => {
@@ -587,7 +582,17 @@ function handleScroll() {
   matterContainer.addEventListener("mouseup", () => {
     matterContainer.style.cursor = "grab";
   });
+
   const containerRect = matterContainer.getBoundingClientRect();
+  const triggerPoint = window.innerHeight * 0.5; // Déclenche quand 10% du conteneur est visible
+
+
+  if (containerRect.top <= triggerPoint && !orbsCreated) {
+    orbsCreated = true;
+    createOrbs().then(() => {
+      console.log("Orbes créées lors du scroll");
+    });
+  }
 
   if (containerRect.top <= 0 && containerRect.bottom >= window.innerHeight) {
     const translateY = Math.min(
