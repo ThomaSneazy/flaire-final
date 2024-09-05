@@ -1495,13 +1495,13 @@ window.addEventListener("load", () => {
 //////////////////////PUSH CARD INTO GRID TEAM//////////////////////
 $(document).ready(function () {
     const teamWrapper = $(".team__wrapper");
-    const teamCard = $(".team__card.is-push");
+    const teamCard = $(".team__job.is-push");
   
     function handleTeamCard() {
       if (teamCard.length > 0) {
         teamWrapper.append(teamCard);
       } else {
-        const newTeamCard = $("<div>").addClass("team__card is-push");
+        const newTeamCard = $("<div>").addClass("team__job is-push");
   
         const imageElement = $("<div>").addClass("team__card-image");
         const imageImg = $("<img>").attr("src", "chemin/vers/limage.jpg").attr("alt", "Description de l'image");
