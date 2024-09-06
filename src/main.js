@@ -91,11 +91,7 @@ function initCircleBigAnimation() {
   });
 
   function updateCircleSize() {
-    const vwSize = 60; 
-    const vwInPixels = (vwSize / 100) * window.innerWidth;
-    const size = Math.min(vwInPixels, window.innerHeight * 0.8); 
-
-    return size;
+    return '60vw';
   }
 
   blocIa1Elements.forEach((blocIa1, index) => {
