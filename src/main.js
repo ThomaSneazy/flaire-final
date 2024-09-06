@@ -91,7 +91,11 @@ function initCircleBigAnimation() {
   });
 
   function updateCircleSize() {
-    return '60vw';
+    const vwSize = 60; 
+    const vwInPixels = (vwSize / 100) * window.innerWidth;
+    const size = Math.min(vwInPixels, window.innerHeight * 0.8); 
+
+    return size;
   }
 
   blocIa1Elements.forEach((blocIa1, index) => {
@@ -154,50 +158,51 @@ function updateCircleSize() {
 function loadSplineScene() {
   const canvas = document.getElementById('spline-main');
   if (canvas) {
-      const spline = new Application(canvas);
-      spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
-          .then(() => {
-              gsap.to(canvas, { opacity: 1, duration: 0.5 });
-          })
-          .catch((error) => {
-              console.error('Erreur lors du chargement de la scène Spline:', error);
-          });
+    const spline = new Application(canvas);
+    spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
+      .then(() => {
+        gsap.to(canvas, { opacity: 1, duration: 0.5 });
+      })
+      .catch((error) => {
+        console.error('Erreur lors du chargement de la scène Spline:', error);
+      });
   } else {
-      console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
+    console.error("Le canvas #spline-main n'a pas été trouvé dans le DOM");
   }
 }
 
 function handleResize() {
   const canvas = document.getElementById('spline-main');
   if (canvas) {
-      if (canvas.style.opacity !== '1') {
-          loadSplineScene();
-      }
+    if (canvas.style.opacity !== '1') {
+      loadSplineScene();
+    }
   }
 }
 
 function handleSplineVisibility() {
-  const marqueeSection = document.querySelector('.section.is-marquee');
   const canvas = document.getElementById('spline-main');
-  if (marqueeSection && canvas) {
-      gsap.set(canvas, { opacity: 1, display: 'block' });
+  if (canvas) {
+    gsap.set(canvas, { opacity: 1 });
 
-      ScrollTrigger.create({
-          trigger: marqueeSection,
-          start: "top bottom",
-          end: "bottom top",
-          onEnter: () => {
-              gsap.to(canvas, { 
-                  opacity: 0, 
-                  duration: 0.3, 
-                  onComplete: () => gsap.set(canvas, { display: 'none' }) 
-              });
-          },
-          onLeaveBack: () => {
-              gsap.set(canvas, { display: 'block' });
-              gsap.to(canvas, { opacity: 1, duration: 0.3 });
-          }
-      });
+    ScrollTrigger.create({
+      start: 0,
+      end: "max",
+      onUpdate: (self) => {
+        const scrollPercentage = self.progress * 100;
+        if (scrollPercentage <= 8) {
+          gsap.to(canvas, { 
+            opacity: 1, 
+            duration: 0.3
+          });
+        } else {
+          gsap.to(canvas, { 
+            opacity: 0, 
+            duration: 0.3
+          });
+        }
+      }
+    });
   }
 }
 
@@ -206,7 +211,6 @@ window.addEventListener('load', () => {
   handleSplineVisibility();
   loadSplineScene();
 });
-    
 // function loadSplineOrbScene() {
 //     const canvas = document.getElementById('spline-orb');
 //     if (canvas) {
@@ -559,7 +563,6 @@ mouseConstraint.mouse.element.addEventListener("mouseup", (event) => {
   matterContainer.style.cursor = "grab";
 });
 
-// Nouvelle fonction pour gérer l'apparition des orbes lors du scroll
 let orbsCreated = false;
 
 function handleScroll() {
@@ -580,7 +583,7 @@ function handleScroll() {
   });
 
   const containerRect = matterContainer.getBoundingClientRect();
-  const triggerPoint = window.innerHeight * 0.5; // Déclenche quand 10% du conteneur est visible
+  const triggerPoint = window.innerHeight * 0.5; 
 
 
   if (containerRect.top <= triggerPoint && !orbsCreated) {
@@ -675,7 +678,6 @@ window.addEventListener("resize", updateCanvasDimensions);
   
     const split = new SplitType(element, { types: "lines" });
   
-    // Vérifiez si split.lines existe et n'est pas vide
     if (!split.lines || split.lines.length === 0) {
       console.warn("Aucune ligne trouvée pour l'animation LineUp");
       return;
@@ -738,178 +740,389 @@ window.addEventListener("resize", updateCanvasDimensions);
     }, 250);
   });
 
-//////////////////////MARQUEE SCROLL EFFECT//////////////////////
-function isMobile() {
-    return window.innerWidth <= 768;
-  }
+
+
+
+
+
+
+  const section = document.querySelector('.section.is-marquee');
+  const marqueeSection = section.querySelector('.marquee-section');
+  const marqueeWrappers = marqueeSection.querySelectorAll('.marquee-wrapper');
   
-  function initCombinedAnimations() {
-    const marqueeWrappers = gsap.utils.toArray(".marquee-wrapper");
-    const galleryContent = document.querySelector(".gallery__content");
-    const galleryItems = gsap.utils.toArray(".gallery__item");
-    const lastItem = document.querySelector(".gallery__item.is-last");
+  const verticalScrollHeight = Math.max(window.innerHeight, window.innerHeight * (0.5 + marqueeWrappers.length * 0.1));
+  const horizontalScrollHeight = window.innerHeight; // Réduit à 100vh pour le mouvement horizontal
+  const totalScrollHeight = verticalScrollHeight + horizontalScrollHeight;
   
-    function initMarqueeAnimation() {
-      if (isMobile()) {
-        marqueeWrappers.forEach((wrapper, index) => {
-          const direction = index % 2 === 0 ? -1 : 1;
-          const moveDistance = direction * 50; 
-  
-          gsap.from(wrapper, {
-            y: "100%",
-            opacity: 0,
-            ease: "power2.out",
-            duration: 1,
-            scrollTrigger: {
-              trigger: wrapper,
-              start: "top bottom",
-              end: "top center",
-              scrub: true,
-            },
-          });
-  
-          gsap.to(wrapper, {
-            x: `${moveDistance}%`,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".section.is-marquee",
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1, 
-            },
-          });
-        });
-      } else {
-        let tlMarquee = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".section.is-marquee",
-            start: "top top",
-            end: "+=500%", 
-            pin: true,
-            scrub: 1,
-            anticipatePin: 1,
-          },
-        });
-  
-        marqueeWrappers.forEach((wrapper, index) => {
-          tlMarquee.from(
-            wrapper,
-            {
-              y: "100%",
-              opacity: 0,
-              ease: "power2.out",
-              duration: 3,
-            },
-            index * 1.5
-          );
-        });
-  
-        tlMarquee.addLabel("startMarquee", ">");
-  
-        marqueeWrappers.forEach((wrapper, index) => {
-          const direction = index % 2 === 0 ? -1 : 1;
-          const moveDistance = direction * 50; 
-          tlMarquee.to(
-            wrapper,
-            {
-              x: `${moveDistance}%`,
-              ease: "none",
-              duration: 20, 
-            },
-            "startMarquee"
-          );
-        });
-      }
+  const tlMarquee = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top top',
+      end: '+=' + totalScrollHeight,
+      pin: true,
+      anticipatePin: 1,
+      scrub: 1, 
     }
+  });
   
-    function initGalleryAnimation() {
-      if (isMobile()) return;
+  gsap.set(marqueeWrappers, { y: 50, opacity: 0 });
+  tlMarquee.to(marqueeWrappers, {
+    y: 0,
+    opacity: 1,
+    duration: 0.3,
+    stagger: 0.1,
+    ease: 'power2.out'
+  }, 0);
   
-      const scrollTween = gsap.to(galleryContent, {
-        x: () => -(galleryContent.scrollWidth - document.documentElement.clientWidth),
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".gallery-wrapper",
-          start: "top top",
-          end: () => `+=${galleryContent.scrollWidth - document.documentElement.clientWidth}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
+  tlMarquee.to(marqueeWrappers, {
+    x: (index, target) => {
+      const direction = index % 2 === 0 ? -1 : 1;
+      return direction * (50 + index * 25) + '%'; 
+    },
+    ease: 'power2.inOut', 
+    duration: 1.2, 
+    stagger: {
+      each: 0.05,
+      from: 'start'
+    }
+  }, verticalScrollHeight / totalScrollHeight);
   
-      galleryItems.forEach((item) => {
-        if (!item.classList.contains("is-last")) {
-          const content = item.querySelector(".gallery__item-content");
+  gsap.set(section, { height: totalScrollHeight + 'px' });
+
+
+  const galleryWrapper = document.querySelector('.section.gallery-wrapper');
+  const galleryContent = galleryWrapper.querySelector('.gallery__content');
+  const galleryItems = galleryContent.querySelectorAll('.gallery__item');
+  const lastItem = galleryContent.querySelector('.gallery__item.is-last');
   
-          gsap.set(content, { filter: "blur(10px)" });
+  function initGalleryAnimation() {
+    const scrollTween = gsap.to(galleryContent, {
+      x: () => -(galleryContent.scrollWidth - document.documentElement.clientWidth),
+      ease: "none",
+      scrollTrigger: {
+        trigger: galleryWrapper,
+        start: "top top",
+        end: () => `+=${galleryContent.scrollWidth - document.documentElement.clientWidth}`,
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
+    });
   
-          ScrollTrigger.create({
-            trigger: item,
-            containerAnimation: scrollTween,
-            start: "left center",
-            end: "right center",
-            onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-            onLeave: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
-            onEnterBack: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-            onLeaveBack: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
-          });
-        }
-      });
+    galleryItems.forEach((item) => {
+      if (!item.classList.contains("is-last")) {
+        const content = item.querySelector(".gallery__item-content");
   
-      if (lastItem) {
-        const orbs = lastItem.querySelectorAll(".orb-horizontal");
+        gsap.set(content, { filter: "blur(10px)" });
   
         ScrollTrigger.create({
-          trigger: lastItem,
+          trigger: item,
           containerAnimation: scrollTween,
-          start: "left 80%",
-          end: "right 20%",
-          onEnter: () => {
-            scrollTween.timeScale(0.5); // Ralentir le scroll
-            animateOrbs(orbs);
-          },
-          onEnterBack: () => {
-            scrollTween.timeScale(0.5); // Ralentir le scroll
-            animateOrbs(orbs);
-          },
-          onLeave: () => {
-            scrollTween.timeScale(1); // Rétablir la vitesse normale
-          },
-          onLeaveBack: () => {
-            scrollTween.timeScale(1); // Rétablir la vitesse normale
-          },
+          start: "left center",
+          end: "right center",
+          onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+          onLeave: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+          onEnterBack: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+          onLeaveBack: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
         });
       }
-    }
+    });
   
-    function animateOrbs(orbs) {
-      gsap.set(orbs, { scale: 0.2, opacity: 0 });
+    if (lastItem) {
+      const orbs = lastItem.querySelectorAll(".orb-horizontal");
   
-      gsap.to(orbs, {
-        scale: 1,
-        opacity: 1,
-        duration: 1.5,
-        ease: "elastic.out(1, 0.3)",
-        stagger: {
-          amount: 1.2,
-          from: "random",
+      ScrollTrigger.create({
+        trigger: lastItem,
+        containerAnimation: scrollTween,
+        start: "left 80%",
+        end: "right 20%",
+        onEnter: () => {
+          scrollTween.timeScale(0.5); 
+          animateOrbs(orbs);
+        },
+        onEnterBack: () => {
+          scrollTween.timeScale(0.5); 
+          animateOrbs(orbs);
+        },
+        onLeave: () => {
+          scrollTween.timeScale(1); 
+        },
+        onLeaveBack: () => {
+          scrollTween.timeScale(1);
         },
       });
     }
-  
-    initMarqueeAnimation();
-    initGalleryAnimation();
   }
   
-  initCombinedAnimations();
+  function animateOrbs(orbs) {
+    gsap.set(orbs, { scale: 0.2, opacity: 0 });
   
-  window.addEventListener("resize", () => {
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-    gsap.killTweensOf("*");
-    initCombinedAnimations();
+    gsap.to(orbs, {
+      scale: 1,
+      opacity: 1,
+      duration: 1.5,
+      ease: "elastic.out(1, 0.3)",
+      stagger: {
+        amount: 1.2,
+        from: "random",
+      },
+    });
+  }
+  
+  initGalleryAnimation();
+
+
+  const navbarForm = document.querySelector('.navbar__form');
+  const navbarMenu = document.querySelector('.navbar__menu');
+  const linkToSections = document.querySelectorAll('.link-to-section');
+  const iconMenu = document.querySelector('.icon-menu');
+  
+  let isMenuOpen = false;
+  
+  function toggleMenu() {
+    if (isMenuOpen) {
+      gsap.to(navbarMenu, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.in",
+        onComplete: () => {
+          navbarMenu.style.display = 'none';
+        }
+      });
+      gsap.to(linkToSections, {
+        y: -30,
+        opacity: 0,
+        duration: 0.2,
+        stagger: 0.05,
+        ease: "power2.in"
+      });
+      gsap.to(iconMenu, {
+        rotateZ: 0,
+        duration: 0.3,
+        ease: "power2.inOut"
+      });
+    } else {
+      navbarMenu.style.display = 'block';
+      gsap.fromTo(navbarMenu, 
+        { scale: 0, opacity: 0 },
+        { 
+          scale: 1, 
+          opacity: 1, 
+          duration: 0.4, 
+          ease: "back.out(1.5)" 
+        }
+      );
+      gsap.fromTo(linkToSections, 
+        { y: -30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.3,
+          stagger: 0.05,
+          ease: "power2.out",
+          delay: 0.2 
+        }
+      );
+      gsap.to(iconMenu, {
+        rotateZ: 180,
+        duration: 0.3,
+        ease: "power2.inOut"
+      });
+    }
+    isMenuOpen = !isMenuOpen;
+  }
+  
+  navbarForm.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleMenu();
   });
+  
+  linkToSections.forEach(link => {
+    link.addEventListener('click', () => {
+      if (isMenuOpen) {
+        toggleMenu();
+      }
+    });
+  });
+//////////////////////MARQUEE SCROLL EFFECT//////////////////////
+// function isMobile() {
+//     return window.innerWidth <= 768;
+//   }
+  
+//   function initCombinedAnimations() {
+//     const marqueeWrappers = gsap.utils.toArray(".marquee-wrapper");
+//     const galleryContent = document.querySelector(".gallery__content");
+//     const galleryItems = gsap.utils.toArray(".gallery__item");
+//     const lastItem = document.querySelector(".gallery__item.is-last");
+  
+//     function initMarqueeAnimation() {
+//       if (isMobile()) {
+//         marqueeWrappers.forEach((wrapper, index) => {
+//           const direction = index % 2 === 0 ? -1 : 1;
+//           const moveDistance = direction * 50; 
+  
+//           gsap.from(wrapper, {
+//             y: "100%",
+//             opacity: 0,
+//             ease: "power2.out",
+//             duration: 1,
+//             scrollTrigger: {
+//               trigger: wrapper,
+//               start: "top bottom",
+//               end: "top center",
+//               scrub: true,
+//             },
+//           });
+  
+//           gsap.to(wrapper, {
+//             x: `${moveDistance}%`,
+//             ease: "none",
+//             scrollTrigger: {
+//               trigger: ".section.is-marquee",
+//               start: "top bottom",
+//               end: "bottom top",
+//               scrub: 1, 
+//             },
+//           });
+//         });
+//       } else {
+//         let tlMarquee = gsap.timeline({
+//           scrollTrigger: {
+//             trigger: ".section.is-marquee",
+//             start: "top top",
+//             end: "+=500%", 
+//             pin: true,
+//             scrub: 1,
+//             anticipatePin: 1,
+//           },
+//         });
+  
+//         marqueeWrappers.forEach((wrapper, index) => {
+//           tlMarquee.from(
+//             wrapper,
+//             {
+//               y: "100%",
+//               opacity: 0,
+//               ease: "power2.out",
+//               duration: 3,
+//             },
+//             index * 1.5
+//           );
+//         });
+  
+//         tlMarquee.addLabel("startMarquee", ">");
+  
+//         marqueeWrappers.forEach((wrapper, index) => {
+//           const direction = index % 2 === 0 ? -1 : 1;
+//           const moveDistance = direction * 50; 
+//           tlMarquee.to(
+//             wrapper,
+//             {
+//               x: `${moveDistance}%`,
+//               ease: "none",
+//               duration: 20, 
+//             },
+//             "startMarquee"
+//           );
+//         });
+//       }
+//     }
+  
+//     function initGalleryAnimation() {
+//       if (isMobile()) return;
+  
+//       const scrollTween = gsap.to(galleryContent, {
+//         x: () => -(galleryContent.scrollWidth - document.documentElement.clientWidth),
+//         ease: "none",
+//         scrollTrigger: {
+//           trigger: ".gallery-wrapper",
+//           start: "top top",
+//           end: () => `+=${galleryContent.scrollWidth - document.documentElement.clientWidth}`,
+//           scrub: 1,
+//           pin: true,
+//           anticipatePin: 1,
+//           invalidateOnRefresh: true,
+//         },
+//       });
+  
+//       galleryItems.forEach((item) => {
+//         if (!item.classList.contains("is-last")) {
+//           const content = item.querySelector(".gallery__item-content");
+  
+//           gsap.set(content, { filter: "blur(10px)" });
+  
+//           ScrollTrigger.create({
+//             trigger: item,
+//             containerAnimation: scrollTween,
+//             start: "left center",
+//             end: "right center",
+//             onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+//             onLeave: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+//             onEnterBack: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+//             onLeaveBack: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+//           });
+//         }
+//       });
+  
+//       if (lastItem) {
+//         const orbs = lastItem.querySelectorAll(".orb-horizontal");
+  
+//         ScrollTrigger.create({
+//           trigger: lastItem,
+//           containerAnimation: scrollTween,
+//           start: "left 80%",
+//           end: "right 20%",
+//           onEnter: () => {
+//             scrollTween.timeScale(0.5); // Ralentir le scroll
+//             animateOrbs(orbs);
+//           },
+//           onEnterBack: () => {
+//             scrollTween.timeScale(0.5); // Ralentir le scroll
+//             animateOrbs(orbs);
+//           },
+//           onLeave: () => {
+//             scrollTween.timeScale(1); // Rétablir la vitesse normale
+//           },
+//           onLeaveBack: () => {
+//             scrollTween.timeScale(1); // Rétablir la vitesse normale
+//           },
+//         });
+//       }
+//     }
+  
+//     function animateOrbs(orbs) {
+//       gsap.set(orbs, { scale: 0.2, opacity: 0 });
+  
+//       gsap.to(orbs, {
+//         scale: 1,
+//         opacity: 1,
+//         duration: 1.5,
+//         ease: "elastic.out(1, 0.3)",
+//         stagger: {
+//           amount: 1.2,
+//           from: "random",
+//         },
+//       });
+//     }
+  
+//     initMarqueeAnimation();
+//     initGalleryAnimation();
+//   }
+  
+//   initCombinedAnimations();
+
+  
+  
+//   window.addEventListener("resize", () => {
+//     ScrollTrigger.getAll().forEach((st) => st.kill());
+//     gsap.killTweensOf("*");
+
+//     setTimeout(() => {
+//       initCombinedAnimations();
+//     }, 100);
+//   });
 
   
 
@@ -983,7 +1196,6 @@ window.addEventListener("load", () => {
     var specialOrb;
   
     function createSpecialOrb() {
-        // console.log("Création de l'orbe spécial");
 
       specialOrb = Bodies.circle(
         loaderRect.width / 2,
@@ -1050,10 +1262,8 @@ window.addEventListener("load", () => {
                   );
                   orbs.push(orb);
                 }
-                // console.log("Ajout des orbes au monde", orbs.length);
 
                 Composite.add(engine.world, orbs);
-                // console.log("Lancement du moteur et du rendu");
                 var runner = Matter.Runner.create();
                 Matter.Runner.run(runner, engine);
                 Render.run(render);
@@ -1155,7 +1365,7 @@ window.addEventListener("load", () => {
           ease: "elastic.out(1, 0.4)",
         })
         .to(formCircle, {
-          duration: 0.125, // Pause légère
+          duration: 0.125, 
           scale: 1,
           ease: "none",
         })
@@ -1239,40 +1449,40 @@ window.addEventListener("load", () => {
   });
 
 
-//////////////////////NAVBAR LOGO COLOR CHANGE ON SCROLL///////////////////////
-const imgNav = document.querySelector(".img-nav");
-const bgWhiteElements = document.querySelectorAll(".bg-white");
+// //////////////////////NAVBAR LOGO COLOR CHANGE ON SCROLL///////////////////////
+// const imgNav = document.querySelector(".img-nav");
+// const bgWhiteElements = document.querySelectorAll(".bg-white");
 
-const DARK_COLOR = "black";
-const LIGHT_COLOR = "#F9F4E8";
+// const DARK_COLOR = "black";
+// const LIGHT_COLOR = "#F9F4E8";
 
-function updateImgNavColor() {
-  const imgNavRect = imgNav.getBoundingClientRect();
-  let isOverWhite = false;
+// function updateImgNavColor() {
+//   const imgNavRect = imgNav.getBoundingClientRect();
+//   let isOverWhite = false;
 
-  bgWhiteElements.forEach((element) => {
-    const elementRect = element.getBoundingClientRect();
-    if (
-      imgNavRect.top < elementRect.bottom &&
-      imgNavRect.bottom > elementRect.top &&
-      imgNavRect.left < elementRect.right &&
-      imgNavRect.right > elementRect.left
-    ) {
-      isOverWhite = true;
-    }
-  });
+//   bgWhiteElements.forEach((element) => {
+//     const elementRect = element.getBoundingClientRect();
+//     if (
+//       imgNavRect.top < elementRect.bottom &&
+//       imgNavRect.bottom > elementRect.top &&
+//       imgNavRect.left < elementRect.right &&
+//       imgNavRect.right > elementRect.left
+//     ) {
+//       isOverWhite = true;
+//     }
+//   });
 
-  if (isOverWhite) {
-    imgNav.style.color = DARK_COLOR;
-  } else {
-    imgNav.style.color = LIGHT_COLOR;
-  }
-}
+//   if (isOverWhite) {
+//     imgNav.style.color = DARK_COLOR;
+//   } else {
+//     imgNav.style.color = LIGHT_COLOR;
+//   }
+// }
 
-updateImgNavColor();
+// updateImgNavColor();
 
-window.addEventListener("scroll", updateImgNavColor);
-window.addEventListener("resize", updateImgNavColor);
+// window.addEventListener("scroll", updateImgNavColor);
+// window.addEventListener("resize", updateImgNavColor);
 
 
 //////////////////////ORBS SHOW ON HOVER PARTNAIRS//////////////////////
@@ -1421,7 +1631,7 @@ window.addEventListener("load", () => {
             ScrollTrigger.create({
                 trigger: tutorialsTitle,
                 start: "top bottom",
-                end: "bottom top", // Changé de "bottom center" à "bottom top" pour prolonger l'animation
+                end: "bottom top", 
                 scrub: 1,
                 markers: false,
                 onUpdate: (self) => {
