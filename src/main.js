@@ -796,81 +796,91 @@ window.addEventListener("resize", updateCanvasDimensions);
   const lastItem = galleryContent.querySelector('.gallery__item.is-last');
   
   function initGalleryAnimation() {
-    const scrollTween = gsap.to(galleryContent, {
-      x: () => -(galleryContent.scrollWidth - document.documentElement.clientWidth),
-      ease: "none",
-      scrollTrigger: {
-        trigger: galleryWrapper,
-        start: "top top",
-        end: () => `+=${galleryContent.scrollWidth - document.documentElement.clientWidth}`,
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-  
-    galleryItems.forEach((item) => {
-      if (!item.classList.contains("is-last")) {
-        const content = item.querySelector(".gallery__item-content");
-  
-        gsap.set(content, { filter: "blur(10px)" });
-  
+    if (window.innerWidth > 767) {
+      const scrollTween = gsap.to(galleryContent, {
+        x: () => -(galleryContent.scrollWidth - document.documentElement.clientWidth),
+        ease: "none",
+        scrollTrigger: {
+          trigger: galleryWrapper,
+          start: "top top",
+          end: () => `+=${galleryContent.scrollWidth - document.documentElement.clientWidth}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+    
+      galleryItems.forEach((item) => {
+        if (!item.classList.contains("is-last")) {
+          const content = item.querySelector(".gallery__item-content");
+    
+          gsap.set(content, { filter: "blur(10px)" });
+    
+          ScrollTrigger.create({
+            trigger: item,
+            containerAnimation: scrollTween,
+            start: "left center",
+            end: "right center",
+            onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+            onLeave: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+            onEnterBack: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
+            onLeaveBack: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+          });
+        }
+      });
+    
+      if (lastItem) {
+        const orbs = lastItem.querySelectorAll(".orb-horizontal");
+    
         ScrollTrigger.create({
-          trigger: item,
+          trigger: lastItem,
           containerAnimation: scrollTween,
-          start: "left center",
-          end: "right center",
-          onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-          onLeave: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
-          onEnterBack: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-          onLeaveBack: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+          start: "left 80%",
+          end: "right 20%",
+          onEnter: () => {
+            scrollTween.timeScale(0.5); 
+            animateOrbs(orbs);
+          },
+          onEnterBack: () => {
+            scrollTween.timeScale(0.5); 
+            animateOrbs(orbs);
+          },
+          onLeave: () => {
+            scrollTween.timeScale(1); 
+          },
+          onLeaveBack: () => {
+            scrollTween.timeScale(1);
+          },
         });
       }
-    });
+    } else {
+      // Réinitialiser les styles pour les appareils mobiles
+      gsap.set(galleryContent, { x: 0 });
+      gsap.set(galleryItems, { filter: "blur(0px)" });
+      ScrollTrigger.getAll().forEach(st => st.kill());
+    }
+  }
   
-    if (lastItem) {
-      const orbs = lastItem.querySelectorAll(".orb-horizontal");
-  
-      ScrollTrigger.create({
-        trigger: lastItem,
-        containerAnimation: scrollTween,
-        start: "left 80%",
-        end: "right 20%",
-        onEnter: () => {
-          scrollTween.timeScale(0.5); 
-          animateOrbs(orbs);
-        },
-        onEnterBack: () => {
-          scrollTween.timeScale(0.5); 
-          animateOrbs(orbs);
-        },
-        onLeave: () => {
-          scrollTween.timeScale(1); 
-        },
-        onLeaveBack: () => {
-          scrollTween.timeScale(1);
+  function animateOrbs(orbs) {
+    if (window.innerWidth > 767) {
+      gsap.set(orbs, { scale: 0.2, opacity: 0 });
+    
+      gsap.to(orbs, {
+        scale: 1,
+        opacity: 1,
+        duration: 1.5,
+        ease: "elastic.out(1, 0.3)",
+        stagger: {
+          amount: 1.2,
+          from: "random",
         },
       });
     }
   }
   
-  function animateOrbs(orbs) {
-    gsap.set(orbs, { scale: 0.2, opacity: 0 });
-  
-    gsap.to(orbs, {
-      scale: 1,
-      opacity: 1,
-      duration: 1.5,
-      ease: "elastic.out(1, 0.3)",
-      stagger: {
-        amount: 1.2,
-        from: "random",
-      },
-    });
-  }
-  
   initGalleryAnimation();
+  window.addEventListener('resize', initGalleryAnimation);
 
 
   const navbarForm = document.querySelector('.navbar__form');
