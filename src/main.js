@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-console.log("hello local 0509");
+console.log("hello local 0509fsdf");
 
 
 let lenis;
