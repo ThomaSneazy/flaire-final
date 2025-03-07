@@ -654,7 +654,7 @@ window.addEventListener("resize", updateCanvasDimensions);
     gsap.set(split.chars, {
       opacity: 0,
       x: "20px",
-      filter: "blur(10px)",
+      // filter: "blur(10px)",
       transformOrigin: "0% 50%",
     });
   
@@ -662,7 +662,7 @@ window.addEventListener("resize", updateCanvasDimensions);
       duration: 0.8,
       opacity: 1,
       y: "0px",
-      filter: "blur(0px)",
+      // filter: "blur(0px)",
       stagger: 0.06,
       ease: "power3.out",
       scrollTrigger: {
@@ -815,17 +815,17 @@ window.addEventListener("resize", updateCanvasDimensions);
         if (!item.classList.contains("is-last")) {
           const content = item.querySelector(".gallery__item-content");
     
-          gsap.set(content, { filter: "blur(10px)" });
+          gsap.set(content, { opacity: 1 });
     
           ScrollTrigger.create({
             trigger: item,
             containerAnimation: scrollTween,
             start: "left center",
             end: "right center",
-            onEnter: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-            onLeave: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
-            onEnterBack: () => gsap.to(content, { filter: "blur(0px)", duration: 0.5 }),
-            onLeaveBack: () => gsap.to(content, { filter: "blur(10px)", duration: 0.5 }),
+            onEnter: () => gsap.to(content, { opacity: 1, duration: 0.5 }),
+            onLeave: () => gsap.to(content, { opacity: 0, duration: 0.5 }),
+            onEnterBack: () => gsap.to(content, { opacity: 1, duration: 0.5 }),
+            onLeaveBack: () => gsap.to(content, { opacity: 0, duration: 0.5 }),
           });
         }
       });
@@ -857,7 +857,7 @@ window.addEventListener("resize", updateCanvasDimensions);
     } else {
       // Réinitialiser les styles pour les appareils mobiles
       gsap.set(galleryContent, { x: 0 });
-      gsap.set(galleryItems, { filter: "blur(0px)" });
+      gsap.set(galleryItems, { opacity: 0 });
       ScrollTrigger.getAll().forEach(st => st.kill());
     }
   }
@@ -1150,184 +1150,65 @@ function disableScroll() {
 window.addEventListener("load", () => {
     disableScroll();
 
-
-    var Engine = Matter.Engine,
-      Render = Matter.Render,
-      Runner = Matter.Runner,
-      Bodies = Matter.Bodies,
-      Composite = Matter.Composite,
-      Body = Matter.Body,
-      Vector = Matter.Vector;
-  
-    var engine = Engine.create();
     var loader = document.querySelector(".loader");
-    var loaderRect = loader.getBoundingClientRect();
-  
-    var render = Render.create({
-      element: loader,
-      engine: engine,
-      options: {
-        width: loaderRect.width,
-        height: loaderRect.height,
-        wireframes: false,
-        background: "transparent",
-      },
-    });
-  
-    var ground = Bodies.rectangle(
-      loaderRect.width / 2,
-      loaderRect.height,
-      loaderRect.width,
-      50,
-      { isStatic: true, render: { fillStyle: "transparent" } },
-    );
-    var leftWall = Bodies.rectangle(
-      0,
-      loaderRect.height / 2,
-      50,
-      loaderRect.height,
-      { isStatic: true, render: { fillStyle: "transparent" } },
-    );
-    var rightWall = Bodies.rectangle(
-      loaderRect.width,
-      loaderRect.height / 2,
-      50,
-      loaderRect.height,
-      { isStatic: true, render: { fillStyle: "transparent" } },
-    );
-  
-    var isMobile = window.innerWidth <= 768;
-    var baseOrbSize = 12.5 * 16;
-    var orbSize = isMobile ? baseOrbSize * 0.35 : baseOrbSize;
-    var specialOrbSize = baseOrbSize;
-    var numOrbs = isMobile ? 20 : 14;
-  
-    var orbs = [];
-    var specialOrb;
-  
-    function createSpecialOrb() {
-
-      specialOrb = Bodies.circle(
-        loaderRect.width / 2,
-        loaderRect.height / 2,
-        specialOrbSize / 2,
-        {
-          isStatic: true,
-          restitution: 0.8,
-          friction: 0.005,
-          render: {
-            fillStyle: "#2c2b2b",
-            strokeStyle: "#2c2b2b",
-            lineWidth: 1,
-          },
-        },
-      );
-      specialOrb.isSpecial = true;
-    }
-  
-    var lineWrapper = document.querySelector(".line-wrapper");
     var orbFake = document.querySelector(".orb-fake");
+    var logoLoader = document.querySelector(".logo-loader");
+    var splineScene = document.querySelector(".spline-main");
     gsap.set(orbFake, { scale: 0, opacity: 0 });
+    gsap.set(splineScene, { scale: 0.8 });
   
     gsap.fromTo(
-      lineWrapper,
-      { width: "0%" },
+      orbFake,
+      { scale: 0, opacity: 0 },
       {
-        duration: 2.1,
-        width: "100%",
-        ease: "power2.out",
+        duration: 1.2,
+        scale: 1,
+        opacity: 1,
+        ease: "power1.inOut",
+        transformOrigin: "center center",
         onComplete: function () {
-          gsap.fromTo(
-            orbFake,
-            { scale: 0, opacity: 0 },
-            {
-              duration: 0.8,
-              scale: 1,
-              opacity: 1,
-              ease: "power1.inOut",
-              transformOrigin: "center center",
-              onComplete: function () {
-                createSpecialOrb();
-                Composite.add(engine.world, [
-                  ground,
-                  leftWall,
-                  rightWall,
-                  specialOrb,
-                ]);
-  
-                for (var i = 0; i < numOrbs; i++) {
-                  var orb = Bodies.circle(
-                    Math.random() * (loaderRect.width - orbSize) + orbSize / 2,
-                    -orbSize * (i + 1),
-                    orbSize / 2,
-                    {
-                      restitution: 0.9,
-                      friction: 0.005,
-                      render: {
-                        fillStyle: "#2c2b2b",
-                        strokeStyle: "#2c2b2b",
-                        lineWidth: 1,
-                      },
-                    },
-                  );
-                  orbs.push(orb);
-                }
-
-                Composite.add(engine.world, orbs);
-                var runner = Matter.Runner.create();
-                Matter.Runner.run(runner, engine);
-                Render.run(render);
-  
-                setTimeout(expandSpecialOrb, 4500);
-              },
-            },
-          );
+          setTimeout(expandOrbFake, 1000);
         },
-      },
+      }
     );
   
-    function expandSpecialOrb() {
-      var center = {
-        x: loaderRect.width / 2,
-        y: loaderRect.height / 2,
-      };
-  
-      var maxRadius = Math.max(window.innerWidth, window.innerHeight) * 1.5;
-  
-      gsap.to(specialOrb, {
-        duration: 1.1,
-        circleRadius: maxRadius,
-        ease: "power2.inOut",
-        onUpdate: function () {
-          Matter.Body.setVertices(
-            specialOrb,
-            Matter.Vertices.create(
-              Matter.Bodies.circle(center.x, center.y, specialOrb.circleRadius)
-                .vertices,
-            ),
-          );
-        },
-        onComplete: function () {
-          Render.stop(render);
-          Engine.clear(engine);
-          gsap.to(loader, {
-            duration: 0.4,
-            opacity: 0,
-            onComplete: function () {
-              loader.style.display = "none";
-              enableScroll();
+    function expandOrbFake() {
+      var maxRadius = Math.max(window.innerWidth, window.innerHeight) * 1;
+      gsap.to(logoLoader, {
+        duration: 0.3,
+        opacity: 0,
+        onComplete: function() {
+          gsap.to(orbFake, {
+            duration: 4,
+            scale: maxRadius,
+            ease: "power2.inOut",
+            onStart: function() {
+              gsap.to(loader, {
+                duration: 0.5,
+                opacity: 0,
+                delay: 0.4
+              });
+              gsap.to(splineScene, {
+                // opacity: 1,
+                scale: 1,
+                duration: 2,
+                delay: 0.5,
+                ease: "elastic.out(1, 0.8)"
+              });
+              
+              gsap.delayedCall(0.5, function() {
+                loader.style.display = "none";
+                enableScroll();
+              });
+            },
+            onComplete: function() {
+              // Animation terminée
             },
           });
-        },
+        }
       });
     }
-  
-    function animate() {
-      requestAnimationFrame(animate);
-      Engine.update(engine);
-    }
-    requestAnimationFrame(animate);
-  });
+});
 
 
 
@@ -1338,6 +1219,7 @@ window.addEventListener("load", () => {
     const overlayBlur = document.querySelector(".overlay-blur");
     const formCircle = document.querySelector(".form-circle");
     const formContact = document.querySelector(".form-contact");
+    const closeForm = document.querySelector(".close-form");
     let isOpen = false;
   
     gsap.set(overlayBlur, {
@@ -1369,10 +1251,10 @@ window.addEventListener("load", () => {
     function showFormCircle() {
       gsap.timeline()
         .to(formCircle, {
-          duration: 0.6,
-          opacity: 1.3,
+          duration: 0.8,
+          opacity: 1,
           scale: 1,
-          ease: "elastic.out(1, 0.4)",
+          ease: "elastic.out(1, 0.8)",
         })
         .to(formCircle, {
           duration: 0.125, 
@@ -1388,7 +1270,7 @@ window.addEventListener("load", () => {
         .to(formCircle, {
           duration: 0.8, 
           scale: 10,
-          ease: "power3.inOut",
+          ease: "power4.inOut",
         })
         .add(showFormContact, "-=0.4");
     }
@@ -1433,30 +1315,38 @@ window.addEventListener("load", () => {
         hideOverlay();
       }
     });
+
+    closeForm.addEventListener("click", hideOverlay);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && isOpen) {
+        hideOverlay();
+      }
+    });
   });
   
 //////////////////////BLUR ON JOB HOVER//////////////////////
-window.addEventListener("load", () => {
-    const jobBlocks = document.querySelectorAll(".job__block");
+// window.addEventListener("load", () => {
+//     const jobBlocks = document.querySelectorAll(".job__block");
   
-    jobBlocks.forEach((block) => {
-      block.style.transition = "filter 0.4s ease";
+//     jobBlocks.forEach((block) => {
+//       block.style.transition = "filter 0.4s ease";
   
-      block.addEventListener("mouseenter", () => {
-        jobBlocks.forEach((otherBlock) => {
-          if (otherBlock !== block) {
-            otherBlock.style.filter = "blur(1.3px)";
-          }
-        });
-      });
+//       block.addEventListener("mouseenter", () => {
+//         jobBlocks.forEach((otherBlock) => {
+//           if (otherBlock !== block) {
+//             otherBlock.style.filter = "blur(1.3px)";
+//           }
+//         });
+//       });
   
-      block.addEventListener("mouseleave", () => {
-        jobBlocks.forEach((otherBlock) => {
-          otherBlock.style.filter = "none";
-        });
-      });
-    });
-  });
+//       block.addEventListener("mouseleave", () => {
+//         jobBlocks.forEach((otherBlock) => {
+//           otherBlock.style.filter = "none";
+//         });
+//       });
+//     });
+//   });
 
 
 // //////////////////////NAVBAR LOGO COLOR CHANGE ON SCROLL///////////////////////
@@ -1633,14 +1523,14 @@ window.addEventListener("load", () => {
     function setupAnimation() {
         if (window.innerWidth > 768) {
             gsap.set(accentElements, {
-                filter: "blur(10px)",
+                // filter: "blur(10px)",
                 opacity: 0,
-                y: 40,
+                y: 80,
             });
         
             ScrollTrigger.create({
                 trigger: tutorialsTitle,
-                start: "top bottom",
+                start: "top center+=100px",
                 end: "bottom top", 
                 scrub: 1,
                 markers: false,
@@ -1652,9 +1542,9 @@ window.addEventListener("load", () => {
                             Math.max(0, (progress - index * 0.1) / 0.2),
                         );
                         gsap.to(element, {
-                            filter: `blur(${10 - 10 * elementProgress}px)`,
-                            opacity: 0.5 + 0.5 * elementProgress,
-                            y: 40 - 40 * elementProgress,
+                            // filter: `blur(${10 - 10 * elementProgress}px)`,
+                            opacity: 0 + 1 * elementProgress,
+                            y: 80 - 80 * elementProgress,
                             duration: 0.1,
                             overwrite: "auto",
                         });
@@ -1663,7 +1553,7 @@ window.addEventListener("load", () => {
                     if (progress > 0.8) {
                         accentElements.forEach((element) => {
                             gsap.to(element, {
-                                filter: "blur(0px)",
+                                // filter: "blur(0px)",
                                 opacity: 1,
                                 y: 0,
                                 duration: 0.1,
@@ -1675,7 +1565,7 @@ window.addEventListener("load", () => {
                 onLeave: () => {
                     accentElements.forEach((element) => {
                         gsap.to(element, {
-                            filter: "blur(0px)",
+                            // filter: "blur(0px)",
                             opacity: 1,
                             y: 0,
                             duration: 0.1,
@@ -1685,9 +1575,9 @@ window.addEventListener("load", () => {
                 onEnterBack: () => {
                     accentElements.forEach((element, index) => {
                         gsap.to(element, {
-                            filter: "blur(10px)",
+                            // filter: "blur(10px)",
                             opacity: 0,
-                            y: 40,
+                            y: 80,
                             duration: 0.3,
                             delay: index * 0.1,
                         });
@@ -1696,7 +1586,7 @@ window.addEventListener("load", () => {
             });
         } else {
             gsap.set(accentElements, {
-                filter: "blur(0px)",
+                // filter: "blur(0px)",
                 opacity: 1,
                 y: 0,
             });
