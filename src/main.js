@@ -340,7 +340,7 @@ function createBoundaries() {
 createBoundaries();
 
 function createOrbs() {
-  const orbCount = 18;
+  const orbCount = 23;
   const viewportHeight = window.innerHeight;
   const viewportWidth = window.innerWidth;
   const minRadius = Math.min(viewportHeight, viewportWidth) * 0.06;
@@ -352,23 +352,31 @@ function createOrbs() {
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a8195d365ae1b90271d81b_pony.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a3a92b28e9986cc27a49c3_yousignsmall%201.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a683bee6046a85bd0f1e96_voodoo2.webp",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc32d9cc6dffc3af2f7_epsor.webp",
+    // "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc32d9cc6dffc3af2f7_epsor.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3662062b2ef6a9637_sensitov.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a681d5a0aef487364aa37e_brigad.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc35ec34d7051fef4bc_voggt.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3a0aef48736497b5d_mojo.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc33d2c836983ab7de4_veesion.webp",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3c3484ec606da9930_kard.webp",
+    // "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3c3484ec606da9930_kard.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc371ccd2ba7cd442c6_upciti.webp",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc34499be2c655a7e6b_gamers.webp",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3574343d34e62cc5f_regate.webp",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a6868fb1e29646c51f123a_z-petit.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce189bfcd40d9948bafba9_3546af87fd78fc56ec9aebba7164eae3_regatelogo-removebg-preview.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a68299574343d34e6487cc_worklif.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a6868fbd3e635cd90fd002_benebono-petit.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a68299b2bff46b633b5c8d_ynergie.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce13a9bb8ec5925b8c49de_nopillologo.svg",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce13a988b3110eab165b8f_tiltlogo.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce189b7ba4c713be5a1209_phenix_black.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce13a947d6a369c998d9d7_legalstartlogo.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce13a9adb52702c237892c_1d182505efb624929d90e53192e99dbb_commandlogo.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce13a908ea1ae1f64fd6cc_dotfilelogo.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce13a924d3407817c4cdfa_81d0e82b3984e371d7842063b63a98db_zealylogo.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce189bdf0450fd7aa6c49b_narval_black.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce13a908ea1ae1f64fd6cf_ecc4e40d0acffad916cd1aaac9e95d25_raidiumlogo.webp",
+    
   ];
 
-  const specialLogos = ["yousign", "voodoo2", "mojo", "upciti","epsor" ];
+  const specialLogos = ["yousign", "voodoo2", "mojo", "upciti","epsor", "regate" ];
   const specialLogoIndexes = imageUrls.reduce((acc, url, index) => {
     if (specialLogos.some((logo) => url.includes(logo))) {
       acc.push(index);
