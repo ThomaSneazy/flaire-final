@@ -358,7 +358,7 @@ function createOrbs() {
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc35ec34d7051fef4bc_voggt.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3a0aef48736497b5d_mojo.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc33d2c836983ab7de4_veesion.webp",
-    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67cec652b4adae6add0b1a17_amologo.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67cec652b4adae6add0b1a17_7390df2f3ca9e3bd6595e0a97294d125_amologo.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc371ccd2ba7cd442c6_upciti.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce189bfcd40d9948bafba9_3546af87fd78fc56ec9aebba7164eae3_regatelogo-removebg-preview.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a68299574343d34e6487cc_worklif.webp",
