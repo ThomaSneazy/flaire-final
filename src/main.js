@@ -340,7 +340,7 @@ function createBoundaries() {
 createBoundaries();
 
 function createOrbs() {
-  const orbCount = 23;
+  const orbCount = 25;
   const viewportHeight = window.innerHeight;
   const viewportWidth = window.innerWidth;
   const minRadius = Math.min(viewportHeight, viewportWidth) * 0.06;
@@ -352,13 +352,13 @@ function createOrbs() {
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a8195d365ae1b90271d81b_pony.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a3a92b28e9986cc27a49c3_yousignsmall%201.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a683bee6046a85bd0f1e96_voodoo2.webp",
-    // "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc32d9cc6dffc3af2f7_epsor.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67cec652f4c5cf5cdd36fece_dustlogo.svg",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3662062b2ef6a9637_sensitov.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a681d5a0aef487364aa37e_brigad.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc35ec34d7051fef4bc_voggt.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3a0aef48736497b5d_mojo.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc33d2c836983ab7de4_veesion.webp",
-    // "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc3c3484ec606da9930_kard.webp",
+    "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67cec652b4adae6add0b1a17_amologo.png",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a67fc371ccd2ba7cd442c6_upciti.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/67ce189bfcd40d9948bafba9_3546af87fd78fc56ec9aebba7164eae3_regatelogo-removebg-preview.webp",
     "https://cdn.prod.website-files.com/667ebf1b9f3deeecd914b073/66a68299574343d34e6487cc_worklif.webp",
@@ -376,7 +376,7 @@ function createOrbs() {
     
   ];
 
-  const specialLogos = ["yousign", "voodoo2", "mojo", "upciti","epsor", "regate" ];
+  const specialLogos = ["yousign", "voodoo2", "mojo", "upciti","epsor", "regate", "dustlogo", "amologo"];
   const specialLogoIndexes = imageUrls.reduce((acc, url, index) => {
     if (specialLogos.some((logo) => url.includes(logo))) {
       acc.push(index);
