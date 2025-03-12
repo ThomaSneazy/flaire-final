@@ -159,7 +159,7 @@ function loadSplineScene() {
   const canvas = document.getElementById('spline-main');
   if (canvas) {
     const spline = new Application(canvas);
-    spline.load('https://prod.spline.design/Rg-pHNQg8MqkVqvU/scene.splinecode')
+    spline.load('https://prod.spline.design/3xUahY3JnUh57dnk/scene.splinecode')
       .then(() => {
         gsap.to(canvas, { opacity: 1, duration: 0.5 });
       })
